@@ -1,5 +1,6 @@
 package com.ayakovlev.interviewprep.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +12,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StudentRegisterDto {
+    @NotBlank(message = "Логин не может быть пустым")
     private String login;
+
+    @NotBlank(message = "Пароль не может быть пустым")
     private String password;
+
     private String name;
     private String email;
 }

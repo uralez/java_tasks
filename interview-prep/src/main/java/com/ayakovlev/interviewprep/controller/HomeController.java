@@ -2,9 +2,11 @@ package com.ayakovlev.interviewprep.controller;
 
 import com.ayakovlev.interviewprep.dto.StudentRegisterDto;
 import com.ayakovlev.interviewprep.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +26,11 @@ public class HomeController {
     }
 
     @PostMapping("/register")
-    public String registerSubmit(@ModelAttribute("dto") StudentRegisterDto dto){
+    public String registerSubmit(@Valid @ModelAttribute("dto") StudentRegisterDto dto, BindingResult result){
+        if(result.hasErrors()){
+            return "register"; // возвращаем форму с ошибками
+        }
+
         studentService.register(dto.getLogin(), dto.getPassword(), dto.getName(), dto.getEmail());
         return "redirect:/login";
     }
