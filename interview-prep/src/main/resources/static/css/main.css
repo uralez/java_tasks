@@ -210,3 +210,135 @@ h1 {
     margin-top: .35rem;
     padding-left: .1rem;
 }
+
+.alert {
+    padding: .75rem 1rem;
+    border-radius: var(--radius);
+    font-size: .875rem;
+    margin-bottom: 1.25rem;
+}
+
+.alert-error {
+    background: rgba(192, 57, 43, .1);
+    border: 1px solid rgba(192, 57, 43, .3);
+    color: var(--error);
+}
+
+.alert-success {
+    background: rgba(61, 107, 79, .1);
+    border: 1px solid rgba(61, 107, 79, .3);
+    color: var(--accent);
+}
+
+/* ===== index.html ===== */
+
+body.page-index {
+    align-items: flex-start;
+}
+
+.page {
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+    animation: fadeUp .45s ease both;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+}
+
+.topbar .brand {
+    margin-bottom: 0;
+}
+
+.btn-logout {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    border-radius: var(--radius);
+    padding: .45rem 1rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+}
+
+.btn-logout:hover {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+.welcome {
+    margin-bottom: 2.5rem;
+}
+
+.welcome h1 {
+    margin-bottom: .3rem;
+}
+
+.welcome .subtitle {
+    margin-bottom: 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+    box-shadow: 0 2px 16px rgba(42,37,32,.05);
+}
+
+.panel.wide {
+    grid-column: 1 / -1;
+}
+
+.panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: .4rem;
+}
+
+.panel-desc {
+    font-size: .85rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+.coming-soon {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(61,107,79,.08);
+    border: 1px solid rgba(61,107,79,.2);
+    padding: .2rem .6rem;
+    border-radius: 20px;
+}
+
+.time {
+    font-size: .8rem;
+    color: var(--muted);
+    font-weight: 300;
+    margin-top: 2rem;
+    text-align: right;
+}

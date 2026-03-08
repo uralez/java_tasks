@@ -1,24 +1,48 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Вход - Interview Prep</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
-<doby>
-    <h2>Вход</h2>
-    <div th:if="${param.error}">
-        <p style="color:red;">Неверный логин или пароль</p>
+<body>
+<div class="card">
+    <div class="brand">Interview Prep</div>
+
+    <h1>Добро пожаловать</h1>
+    <p class="subtitle">Войдите, чтобы продолжить практику</p>
+
+    <div th:if="${param.error}" class="alert alert-error">
+        Неверный логин или пароль
     </div>
-    <div th:if="${param.logout}">
-        <p style="color:green;">Вы вышли из системы</p>
+    <div th:if="${param.logout}" class="alert alert-success">
+        Вы вышли из системы
     </div>
+
     <form th:action="@{/login}" method="post">
-        <div>
-            <label>Логин: <input type="text" name="username"/></label>
+
+        <div class="field">
+            <div class="field-label-row">
+                <label for="username">Логин</label>
+            </div>
+            <input id="username" type="text" name="username" placeholder="ваш логин" autocomplete="username"/>
         </div>
-        <div>
-            <label>Пароль: <input type="password" name="password"/></label>
+
+        <div class="field">
+            <div class="field-label-row">
+                <label for="password">Пароль</label>
+            </div>
+            <input id="password" type="password" name="password" placeholder="ваш пароль" autocomplete="current-password"/>
         </div>
-        <button type="submit">Войти</button>
+
+        <button class="btn" type="submit">Войти →</button>
     </form>
-</doby>
+
+    <div class="footer-link">
+        Нет аккаунта? <a th:href="@{/register}">Зарегистрироваться</a>
+    </div>
+</div>
+</body>
 </html>

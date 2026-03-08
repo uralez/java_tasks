@@ -1,10 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Interview Preparation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
-<body>
-    <h1>Interview Preparation</h1>
-    <p>Текущее время: <span th:text="${currentTime}"></span></p>
+<body class="page-index">
+<div class="page">
+
+    <div class="topbar">
+        <div class="brand">Interview Prep</div>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn-logout" type="submit">Выйти</button>
+        </form>
+    </div>
+
+    <div class="welcome">
+        <h1>Привет, <span th:text="${#authentication.name}">студент</span></h1>
+        <p class="subtitle">Продолжайте практику &mdash; каждый ответ приближает вас к цели</p>
+    </div>
+
+    <div class="grid">
+
+        <div class="panel">
+            <div class="panel-title">Мои темы</div>
+            <div class="panel-desc">Список тем, по которым есть зарегистрированные ответы. Нажмите на тему, чтобы увидеть вопросы.</div>
+            <span class="coming-soon">скоро</span>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">Динамика оценок</div>
+            <div class="panel-desc">График изменения оценок по времени &mdash; отслеживайте свой прогресс.</div>
+            <span class="coming-soon">скоро</span>
+        </div>
+
+        <div class="panel wide">
+            <div class="panel-title">Зарегистрировать ответ</div>
+            <div class="panel-desc">Выберите тему и вопрос, введите текст ответа, укажите оценку и оценщика.</div>
+            <span class="coming-soon">скоро</span>
+        </div>
+    </div>
+
+    <div class="time">
+        <span th:text="${currentTime}"></span>
+    </div>
+
+</div>
 </body>
 </html>
