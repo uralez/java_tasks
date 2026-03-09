@@ -13,3 +13,9 @@
       file: db/changelog/changes/006_create_question.sql
   - include:
       file: db/changelog/changes/007_create_answer.sql
+  - include:
+      file: db/changelog/changes/008_insert_evaluators.sql
+  - include:
+      file: db/changelog/changes/009_insert_topics.sql
+  - include:
+      file: db/changelog/changes/010_insert_questions.sql
