@@ -38,9 +38,67 @@
 
         <div class="panel wide">
             <div class="panel-title">Зарегистрировать ответ</div>
-            <div class="panel-desc">Выберите тему и вопрос, введите текст ответа, укажите оценку и оценщика.</div>
-            <span class="coming-soon">скоро</span>
+
+            <form th:action="@{/answer}" method="post">
+
+                <div class="field">
+                    <div class="field-label-row">
+                        <label for="topicId">Тема</label>
+                    </div>
+                    <select id="topicId" name="topicId" class="field-select">
+                        <option value="">- выберите тему -</option>
+                        <option th:each="topic : ${topics}"
+                                th:value="${topic.id}"
+                                th:text="${topic.name}"></option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <div class="field-label-row">
+                        <label for="questionId">Вопрос</label>
+                    </div>
+                    <select id="questionId" name="questionId" class="field-select">
+                        <option value="">- сначала выберите тему -</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <div class="field-label-row">
+                        <label for="text">Ответ</label>
+                    </div>
+                    <textarea id="text" name="text" class="field-textarea" placeholder="Введите текст ответа..."></textarea>
+                </div>
+
+                <div class="field">
+                    <div class="field-label-row">
+                        <label for="grade">Оценка (1.0 - 5.0)</label>
+                    </div>
+                    <input id="grade" type="number" name="grade" class="field-input" min="1" max="5" step="0.1" placeholder="например, 4.5"/>
+                </div>
+
+                <div class="field">
+                    <div class="field-label-row">
+                        <label for="evaluatorId">Оценщик</label>
+                    </div>
+                    <select id="evaluatorId" name="evaluatorId" class="field-select">
+                        <option value="">- выберите оценщика -</option>
+                        <option th:each="evaluator : ${evaluators}"
+                                th:value="${evaluator.id}"
+                                th:text="${evaluator.name}"></option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <div class="field-label-row">
+                        <label for="answerDate">Дата ответа</label>
+                    </div>
+                    <input id="answerDate" type="date" name="answerDate" class="field-input" th:value="${today}"/>
+                </div>
+
+                <button class="btn" type="submit">Сохранить ответ</button>
+            </form>
         </div>
+
     </div>
 
     <div class="time">
@@ -48,5 +106,29 @@
     </div>
 
 </div>
+
+<script th:inline="javascript">
+    const questions = /*[[${questions}]]*/ {};
+
+    document.getElementById('topicId').addEventListener('change', function () {
+        const topicId = this.value;
+        const questionSelect = document.getElementById('questionId');
+        questionSelect.innerHTML = '<option value="">- выберите вопрос -</option>';
+
+        if (topicId) {
+            fetch('/questions?topicId=' + topicId) // отправляем запрос
+                .then(response => response.json()) // когда ответ пришёл — парсим JSON
+                .then(questions => {                // когда JSON распарсен — заполняем список
+                    questions.forEach(q => {
+                        const option = document.createElement('option');
+                        option.value = q.id;
+                        option.text = q.text;
+                        questionSelect.appendChild(option);
+                    });
+                });
+        }
+    });
+
+</script>
 </body>
 </html>

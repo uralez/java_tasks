@@ -1,5 +1,6 @@
 package com.ayakovlev.interviewprep.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -17,5 +18,6 @@ public class Question extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)
+    @JsonIgnore
     private Topic topic;
 }
