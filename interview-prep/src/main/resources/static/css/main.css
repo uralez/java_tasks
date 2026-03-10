@@ -372,3 +372,42 @@ body.page-index {
     min-height: 120px;
     resize: vertical;
 }
+
+/* -- index stat --*/
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+    margin-top: .5rem;
+}
+
+.stats-table th,
+.stats-table td {
+    padding: .5rem .75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.stats-table th {
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.stats-table tr:last-child td {
+    border-bottom: none;
+}
+/* === accordion === */
+.questions-list {
+    margin: .25rem 0;
+    padding-left: 1.25rem;
+}
+
+.questions-list li {
+    padding: .2rem 0;
+    color: var(--text);
+    font-size: .85rem;
+}
+
+.topic-row:hover {
+    background-color: var(--bg);
+}

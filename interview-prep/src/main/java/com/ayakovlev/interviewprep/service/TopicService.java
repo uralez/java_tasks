@@ -2,16 +2,16 @@ package com.ayakovlev.interviewprep.service;
 
 import com.ayakovlev.interviewprep.entity.Topic;
 import com.ayakovlev.interviewprep.repository.TopicRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TopicService {
 
-    @Autowired
-    private TopicRepository topicRepository;
+    private final TopicRepository topicRepository;
 
     public List<Topic> findAll(){
         return topicRepository.findAll();

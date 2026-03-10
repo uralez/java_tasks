@@ -4,7 +4,7 @@ import com.ayakovlev.interviewprep.dto.StudentRegisterDto;
 import com.ayakovlev.interviewprep.entity.*;
 import com.ayakovlev.interviewprep.service.*;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,17 +18,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private TopicService topicService;
-    @Autowired
-    private EvaluatorService evaluatorService;
-    @Autowired
-    private QuestionService questionService;
-    @Autowired
-    private AnswerService answerService;
+    private final StudentService    studentService;
+    private final TopicService      topicService;
+    private final EvaluatorService  evaluatorService;
+    private final QuestionService   questionService;
+    private final AnswerService     answerService;
 
     @GetMapping("/register")
     public String registerForm(Model model){
@@ -47,7 +43,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(Model model){
+    public String home(Model model, @AuthenticationPrincipal Student student){
         model.addAttribute("currentTime",
                 LocalDateTime.now().format(
                         DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
@@ -56,6 +52,7 @@ public class HomeController {
         model.addAttribute("topics", topicService.findAll());
         model.addAttribute("evaluators", evaluatorService.findAll());
         model.addAttribute("today", LocalDate.now().toString());
+        model.addAttribute("topicStats", answerService.findTopicsWithQuestions(student));
         return "index";
     }
 

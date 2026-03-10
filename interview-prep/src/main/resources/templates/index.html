@@ -24,10 +24,38 @@
 
     <div class="grid">
 
+
+
         <div class="panel">
             <div class="panel-title">Мои темы</div>
-            <div class="panel-desc">Список тем, по которым есть зарегистрированные ответы. Нажмите на тему, чтобы увидеть вопросы.</div>
-            <span class="coming-soon">скоро</span>
+            <div th:if="${#lists.isEmpty(topicStats)}" class="panel-desc">
+                Ответов пока нет. Зарегистрируйте первый ответ.
+            </div>
+            <table th:if="${!#lists.isEmpty(topicStats)}" class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Тема</th>
+                        <th>Ответов</th>
+                        <th>Средняя оценка</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th:block th:each="stat : ${topicStats}">
+                        <tr class="topic-row" th:attr="data-topic=${stat.topicName}">
+                            <td th:text="${stat.topicName}"></td>
+                            <td th:text="${stat.answerCount}"></td>
+                            <td th:text="${#numbers.formatDecimal(stat.avgGrade, 1, 1)}"></td>
+                        </tr>
+                        <tr class="questions-row" th:attr="data-topic=${stat.topicName}" style="display:none;">
+                            <td colspan="3">
+                                <ul class="questions-list">
+                                    <li th:each="q : ${stat.questions}" th:text="${q}"></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
         </div>
 
         <div class="panel">
@@ -129,6 +157,14 @@
         }
     });
 
+    document.querySelectorAll('.topic-row').forEach(row => {
+        row.style.cursor = 'pointer';
+        row.addEventListener('click', function(){
+            const topic = this.getAttribute('data-topic');
+            const qRow = document.querySelector(`.questions-row[data-topic="${topic}"]`);
+            qRow.style.display = qRow.style.display === 'none' ? 'table-row' : 'none';
+        });
+    });
 </script>
 </body>
 </html>
