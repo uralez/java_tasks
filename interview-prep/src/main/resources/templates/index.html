@@ -6,6 +6,7 @@
     <title>Interview Preparation</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body class="page-index">
 <div class="page">
@@ -41,6 +42,8 @@
                     </tr>
                 </thead>
                 <tbody>
+
+
                     <th:block th:each="stat : ${topicStats}">
                         <tr class="topic-row" th:attr="data-topic=${stat.topicName}">
                             <td th:text="${stat.topicName}"></td>
@@ -50,7 +53,10 @@
                         <tr class="questions-row" th:attr="data-topic=${stat.topicName}" style="display:none;">
                             <td colspan="3">
                                 <ul class="questions-list">
-                                    <li th:each="q : ${stat.questions}" th:text="${q}"></li>
+                                    <li th:each="q : ${stat.questions}"
+                                        th:text="${q.text}"
+                                        th:attr="data-id=${q.id}, data-topic=${stat.topicName}"
+                                        class="question-item"></li>
                                 </ul>
                             </td>
                         </tr>
@@ -61,8 +67,7 @@
 
         <div class="panel">
             <div class="panel-title">Динамика оценок</div>
-            <div class="panel-desc">График изменения оценок по времени &mdash; отслеживайте свой прогресс.</div>
-            <span class="coming-soon">скоро</span>
+            <canvas id="gradeChart"></canvas>
         </div>
 
         <div class="panel wide">
@@ -136,36 +141,6 @@
 
 </div>
 
-<script th:inline="javascript">
-    const questions = /*[[${questions}]]*/ {};
-
-    document.getElementById('topicId').addEventListener('change', function () {
-        const topicId = this.value;
-        const questionSelect = document.getElementById('questionId');
-        questionSelect.innerHTML = '<option value="">- выберите вопрос -</option>';
-
-        if (topicId) {
-            fetch('/questions?topicId=' + topicId) // отправляем запрос
-                .then(response => response.json()) // когда ответ пришёл — парсим JSON
-                .then(questions => {                // когда JSON распарсен — заполняем список
-                    questions.forEach(q => {
-                        const option = document.createElement('option');
-                        option.value = q.id;
-                        option.text = q.text;
-                        questionSelect.appendChild(option);
-                    });
-                });
-        }
-    });
-
-    document.querySelectorAll('.topic-row').forEach(row => {
-        row.style.cursor = 'pointer';
-        row.addEventListener('click', function(){
-            const topic = this.getAttribute('data-topic');
-            const qRow = document.querySelector(`.questions-row[data-topic="${topic}"]`);
-            qRow.style.display = qRow.style.display === 'none' ? 'table-row' : 'none';
-        });
-    });
-</script>
+<script th:src="@{/js/main.js}"></script>
 </body>
 </html>

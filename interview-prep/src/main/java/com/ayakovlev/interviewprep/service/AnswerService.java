@@ -1,5 +1,7 @@
 package com.ayakovlev.interviewprep.service;
 
+import com.ayakovlev.interviewprep.dto.GradePointDto;
+import com.ayakovlev.interviewprep.dto.QuestionDto;
 import com.ayakovlev.interviewprep.dto.TopicQuestionRow;
 import com.ayakovlev.interviewprep.dto.TopicWithQuestionsDto;
 import com.ayakovlev.interviewprep.entity.Answer;
@@ -34,8 +36,12 @@ public class AnswerService {
             map.computeIfAbsent(
                     row.getTopicName(),
                     k -> new TopicWithQuestionsDto(row.getTopicName(), row.getAnswerCount(), row.getAvgGrade(), new ArrayList<>())
-            ).getQuestions().add(row.getQuestionText());
+            ).getQuestions().add(new QuestionDto(row.getQuestionId(), row.getQuestionText()));
         }
         return new ArrayList<>(map.values());
+    }
+
+    public List<GradePointDto> findGradesByQuestion(Long questionId, Student student) {
+        return answerRepository.findGradesByQuestion(questionId, student);
     }
 }

@@ -1,5 +1,6 @@
 package com.ayakovlev.interviewprep.controller;
 
+import com.ayakovlev.interviewprep.dto.GradePointDto;
 import com.ayakovlev.interviewprep.dto.StudentRegisterDto;
 import com.ayakovlev.interviewprep.entity.*;
 import com.ayakovlev.interviewprep.service.*;
@@ -111,5 +112,13 @@ public class HomeController {
     @GetMapping("/login")
     public String login(){
         return "login";
+    }
+
+    @GetMapping("/grades")
+    @ResponseBody
+    public List<GradePointDto> getGradesByQuestion(
+            @RequestParam Long questionId,
+            @AuthenticationPrincipal Student student){
+        return answerService.findGradesByQuestion(questionId, student);
     }
 }

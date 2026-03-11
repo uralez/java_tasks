@@ -10,5 +10,5 @@ public class TopicWithQuestionsDto {
     private String topicName;
     private Long answerCount;
     private Double avgGrade;
-    private List<String> questions;
+    private List<QuestionDto> questions;
 }
