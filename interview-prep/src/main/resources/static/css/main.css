@@ -411,3 +411,21 @@ body.page-index {
 .topic-row:hover {
     background-color: var(--bg);
 }
+/* === topbar === */
+.topbar-user {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: .85rem;
+    line-height: 1.3;
+}
+
+.topbar-name {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.topbar-role {
+    color: var(--muted);
+    font-size: .75rem;
+}

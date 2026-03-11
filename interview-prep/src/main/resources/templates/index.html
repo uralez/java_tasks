@@ -12,6 +12,10 @@
 
     <div class="topbar">
         <div class="brand">Interview Prep</div>
+        <div class="topbar-user">
+            <span class="topbar-name" th:text="${#authentication.principal.name}"></span>
+            <span class="topbar-role" th:text="${#authentication.principal.role}"></span>
+        </div>
         <form th:action="@{/logout}" method="post">
             <button class="btn-logout" type="submit">Выйти</button>
         </form>
@@ -23,9 +27,6 @@
     </div>
 
     <div class="grid">
-
-
-
         <div class="panel">
             <div class="panel-title">Мои темы</div>
             <div th:if="${#lists.isEmpty(topicStats)}" class="panel-desc">
