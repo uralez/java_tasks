@@ -429,3 +429,20 @@ body.page-index {
     color: var(--muted);
     font-size: .75rem;
 }
+/* === i18n === */
+.lang-switcher {
+    display: flex;
+    gap: .5rem;
+    font-size: .85rem;
+}
+
+.lang-switcher a {
+    color: var(--muted);
+    text-decoration: none;
+    padding: .2rem .4rem;
+    border-radius: 4px;
+}
+
+.lang-switcher a:hover {
+    color: var(--accent);
+}

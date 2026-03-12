@@ -12,38 +12,41 @@
 <div class="page">
 
     <div class="topbar">
-        <div class="brand">Interview Prep</div>
+        <div class="brand" th:text="#{topbar.brand}">Interview Prep</div>
         <div class="topbar-user">
             <span class="topbar-name" th:text="${#authentication.principal.name}"></span>
             <span class="topbar-role" th:text="${#authentication.principal.role}"></span>
         </div>
+        <div class="lang-switcher">
+            <a th:href="@{/(lang=en)}" th:text="#{lang.en}"></a>
+            <a th:href="@{/(lang=de)}" th:text="#{lang.de}"></a>
+            <a th:href="@{/(lang=ru)}" th:text="#{lang.ru}"></a>
+        </div>
         <form th:action="@{/logout}" method="post">
-            <button class="btn-logout" type="submit">Выйти</button>
+            <button class="btn-logout" type="submit" th:text="#{topbar.logout}">Log out</button>
         </form>
     </div>
 
     <div class="welcome">
-        <h1>Привет, <span th:text="${#authentication.name}">студент</span></h1>
-        <p class="subtitle">Продолжайте практику &mdash; каждый ответ приближает вас к цели</p>
+        <h1><span th:text="#{welcome.title}">Hello, </span><span th:text="${#authentication.name}">студент</span></h1>
+        <p class="subtitle" th:text="#{welcome.subtitle}">Продолжайте практику &mdash; каждый ответ приближает вас к цели</p>
     </div>
 
     <div class="grid">
         <div class="panel">
-            <div class="panel-title">Мои темы</div>
-            <div th:if="${#lists.isEmpty(topicStats)}" class="panel-desc">
+            <div class="panel-title" th:text="#{panel.myTopics}">My Topics</div>
+            <div th:if="${#lists.isEmpty(topicStats)}" class="panel-desc" th:text="#{panel.noAnswers}">
                 Ответов пока нет. Зарегистрируйте первый ответ.
             </div>
             <table th:if="${!#lists.isEmpty(topicStats)}" class="stats-table">
                 <thead>
                     <tr>
-                        <th>Тема</th>
-                        <th>Ответов</th>
-                        <th>Средняя оценка</th>
+                        <th th:text="#{panel.topics.topic}">Topic</th>
+                        <th th:text="#{panel.topics.count}">Answers</th>
+                        <th th:text="#{panel.topics.avg}">Average Grade</th>
                     </tr>
                 </thead>
                 <tbody>
-
-
                     <th:block th:each="stat : ${topicStats}">
                         <tr class="topic-row" th:attr="data-topic=${stat.topicName}">
                             <td th:text="${stat.topicName}"></td>
@@ -66,21 +69,21 @@
         </div>
 
         <div class="panel">
-            <div class="panel-title">Динамика оценок</div>
+            <div class="panel-title" th:text="#{panel.gradeChart}">Grade Dynamics</div>
             <canvas id="gradeChart"></canvas>
         </div>
 
         <div class="panel wide">
-            <div class="panel-title">Зарегистрировать ответ</div>
+            <div class="panel-title" th:text="#{panel.registerAnswer}">Register Answer</div>
 
             <form th:action="@{/answer}" method="post">
 
                 <div class="field">
                     <div class="field-label-row">
-                        <label for="topicId">Тема</label>
+                        <label for="topicId" th:text="#{form.topic}">Topic</label>
                     </div>
                     <select id="topicId" name="topicId" class="field-select">
-                        <option value="">- выберите тему -</option>
+                        <option value="" th:text="#{form.topic.placeholder}">- select topic -</option>
                         <option th:each="topic : ${topics}"
                                 th:value="${topic.id}"
                                 th:text="${topic.name}"></option>
@@ -89,33 +92,33 @@
 
                 <div class="field">
                     <div class="field-label-row">
-                        <label for="questionId">Вопрос</label>
+                        <label for="questionId" th:text="#{form.question}">Question</label>
                     </div>
                     <select id="questionId" name="questionId" class="field-select">
-                        <option value="">- сначала выберите тему -</option>
+                        <option value="" th:text="#{form.question.placeholder}">- select topic first -</option>
                     </select>
                 </div>
 
                 <div class="field">
                     <div class="field-label-row">
-                        <label for="text">Ответ</label>
+                        <label for="text" th:text="#{form.answer}">Answer</label>
                     </div>
-                    <textarea id="text" name="text" class="field-textarea" placeholder="Введите текст ответа..."></textarea>
+                    <textarea id="text" name="text" class="field-textarea" th:placeholder="#{form.answer.placeholder}"></textarea>
                 </div>
 
                 <div class="field">
                     <div class="field-label-row">
-                        <label for="grade">Оценка (1.0 - 5.0)</label>
+                        <label for="grade" th:text="#{form.grade}">Grade (1.0 - 5.0)</label>
                     </div>
-                    <input id="grade" type="number" name="grade" class="field-input" min="1" max="5" step="0.1" placeholder="например, 4.5"/>
+                    <input id="grade" type="number" name="grade" class="field-input" min="1" max="5" step="0.1" th:placeholder="#{form.grade.placeholder}"/>
                 </div>
 
                 <div class="field">
                     <div class="field-label-row">
-                        <label for="evaluatorId">Оценщик</label>
+                        <label for="evaluatorId" th:text="#{form.evaluator}">Evaluator</label>
                     </div>
                     <select id="evaluatorId" name="evaluatorId" class="field-select">
-                        <option value="">- выберите оценщика -</option>
+                        <option value="" th:text="#{form.evaluator.placeholder}">- select evaluator -</option>
                         <option th:each="evaluator : ${evaluators}"
                                 th:value="${evaluator.id}"
                                 th:text="${evaluator.name}"></option>
@@ -124,12 +127,12 @@
 
                 <div class="field">
                     <div class="field-label-row">
-                        <label for="answerDate">Дата ответа</label>
+                        <label for="answerDate" th:text="#{form.date}">Answer Date</label>
                     </div>
                     <input id="answerDate" type="date" name="answerDate" class="field-input" th:value="${today}"/>
                 </div>
 
-                <button class="btn" type="submit">Сохранить ответ</button>
+                <button class="btn" type="submit" th:text="#{form.submit}">Save Answer</button>
             </form>
         </div>
 
