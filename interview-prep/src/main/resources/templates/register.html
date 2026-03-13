@@ -3,59 +3,65 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Регистрация</title>
+    <title th:text="#{register.title}">Register</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
 <div class="card">
-    <div class="brand">Interview Prep</div>
+    <div class="brand" th:text="#{topbar.brand}">Interview Prep</div>
 
-    <h1>Создать аккаунт</h1>
-    <p class="subtitle">Заполните форму, чтобы начать практику</p>
+    <div class="lang-switcher">
+        <a th:href="@{/register(lang=en)}" th:text="#{lang.en}"></a>
+        <a th:href="@{/register(lang=de)}" th:text="#{lang.de}"></a>
+        <a th:href="@{/register(lang=ru)}" th:text="#{lang.ru}"></a>
+    </div>
+
+    <h1 th:text="#{register.title}">Create Account</h1>
+    <p class="subtitle" th:text="#{register.subtitle}">Fill in the form to start practicing</p>
 
     <form th:action="@{/register}" th:object="${dto}" method="post">
         <div class="field">
             <div class="field-label-row">
-                <label for="login">Логин</label>
+                <label for="login" th:text="#{login.username}">Login</label>
             </div>
-            <input id="login" type="text" th:field="*{login}" placeholder="например, ivan_petrov" autocomplete="username" required/>
+            <input id="login" type="text" th:field="*{login}" th:placeholder="#{register.login.placeholder}" autocomplete="username" required/>
             <p class="field-error" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></p>
-            <p class="hint required">Обязательное поле. Должен быть уникальным.</p>
+            <p class="hint required" th:text="#{register.login.hint}">Required. Must be unique.</p>
         </div>
 
         <div class="field">
             <div class="field-label-row">
-                <label for="password">Пароль</label>
+                <label for="password" th:text="#{login.password}">Password</label>
             </div>
-            <input id="password" type="password" th:field="*{password}" placeholder="любой пароль" autocomplete="new-password" required/>
+            <input id="password" type="password" th:field="*{password}" th:placeholder="#{register.password.placeholder}" autocomplete="new-password" required/>
             <p class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-            <p class="hint required">Обязательное поле. Может быть простым.</p>
+            <p class="hint required" th:text="#{register.password.hint}">Required. Can be simple.</p>
         </div>
 
-        <div class="divider">необязательные поля</div>
+        <div class="divider" th:text="#{register.optional.divider}">optional fields</div>
 
         <div class="field">
             <div class="field-label-row">
-                <label for="name">Имя</label>
-                <span class="badge-optional">необязательно</span>
+                <label for="name" th:text="#{register.name}">Name</label>
+                <span class="badge-optional" th:text="#{register.optional}">optional</span>
             </div>
-            <input id="name" type="text" th:field="*{name}" placeholder="Иван Петров" autocomplete="name"/>
+            <input id="name" type="text" th:field="*{name}" th:placeholder="#{register.name.placeholder}" autocomplete="name"/>
         </div>
 
         <div class="field">
             <div class="field-label-row">
-                <label for="email">Email</label>
-                <span class="badge-optional">необязательно</span>
+                <label for="email" th:text="#{register.email}">Email</label>
+                <span class="badge-optional" th:text="#{register.optional}">optional</span>
             </div>
-            <input id="email" type="text" th:field="*{email}" placeholder="ivan@example.com" autocomplete="email"/>
+            <input id="email" type="text" th:field="*{email}" th:placeholder="#{register.email.placeholder}" autocomplete="email"/>
         </div>
 
-        <button class="btn" type="submit">Зарегистрироваться →</button>
+        <button class="btn" type="submit" th:text="#{register.submit}">Register →</button>
     </form>
 
     <div class="footer-link">
-        Уже есть аккаунт? <a th:href="@{/login}">Войти</a>
+        <span th:text="#{register.hasAccount}">Already have an account?</span> <a th:href="@{/login}" th:text="#{register.login}">Login</a>
     </div>
 </div>
 </body>

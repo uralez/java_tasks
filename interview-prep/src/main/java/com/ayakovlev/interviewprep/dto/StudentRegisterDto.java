@@ -12,10 +12,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StudentRegisterDto {
-    @NotBlank(message = "Логин не может быть пустым")
+    @NotBlank(message = "{validation.login.notBlank}")
     private String login;
 
-    @NotBlank(message = "Пароль не может быть пустым")
+    @NotBlank(message = "validation.password.notBlank")
     private String password;
 
     private String name;
