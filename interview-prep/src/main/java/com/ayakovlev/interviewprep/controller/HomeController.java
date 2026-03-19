@@ -1,9 +1,11 @@
 package com.ayakovlev.interviewprep.controller;
 
 import com.ayakovlev.interviewprep.dto.GradePointDto;
+import com.ayakovlev.interviewprep.dto.QuestionDto;
 import com.ayakovlev.interviewprep.dto.StudentRegisterDto;
 import com.ayakovlev.interviewprep.entity.*;
 import com.ayakovlev.interviewprep.service.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -44,16 +47,21 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(Model model, @AuthenticationPrincipal Student student){
+    public String home(
+            Model model,
+            @AuthenticationPrincipal Student student,
+            HttpServletRequest request){
+        String locale = RequestContextUtils.getLocale(request).getLanguage();
+
         model.addAttribute("currentTime",
                 LocalDateTime.now().format(
                         DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
                 )
         );
-        model.addAttribute("topics", topicService.findAll());
+        model.addAttribute("topics", topicService.findAllWithTranslation(locale));
         model.addAttribute("evaluators", evaluatorService.findAll());
         model.addAttribute("today", LocalDate.now().toString());
-        model.addAttribute("topicStats", answerService.findTopicsWithQuestions(student));
+        model.addAttribute("topicStats", answerService.findTopicsWithQuestions(student, locale));
         return "index";
     }
 
@@ -103,10 +111,14 @@ public class HomeController {
     * */
     @GetMapping("/questions")
     @ResponseBody
-    public List<Question> getQuestionsByTopic(@RequestParam Long topicId){
+    public List<QuestionDto> getQuestionsByTopic(
+            @RequestParam Long topicId,
+            HttpServletRequest request){
+        String locale = RequestContextUtils.getLocale(request).getLanguage();
+
         Topic topic = new Topic();
         topic.setId(topicId);
-        return questionService.findByTopic(topic);
+        return questionService.findByTopicWithTranslation(topic, locale);
     }
 
     @GetMapping("/login")

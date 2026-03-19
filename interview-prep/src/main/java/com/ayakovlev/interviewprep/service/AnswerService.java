@@ -29,8 +29,8 @@ public class AnswerService {
         answerRepository.save(answer);
     }
 
-    public List<TopicWithQuestionsDto> findTopicsWithQuestions(Student student){
-        List<TopicQuestionRow> rows = answerRepository.findTopicsWithQuestions(student);
+    public List<TopicWithQuestionsDto> findTopicsWithQuestions(Student student, String locale){
+        List<TopicQuestionRow> rows = answerRepository.findTopicsWithQuestions(student, locale);
         Map<String, TopicWithQuestionsDto> map = new LinkedHashMap<>();
         for (TopicQuestionRow row : rows){
             map.computeIfAbsent(

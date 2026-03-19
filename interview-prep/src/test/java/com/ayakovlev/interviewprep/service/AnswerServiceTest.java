@@ -59,16 +59,17 @@ public class AnswerServiceTest {
     @Test
     void findTopicsWithQuestions_groupRowsByTopic(){
         // arrange
+        String locale = "en";
         Student student = new Student();
         List<TopicQuestionRow> rows = List.of(
                 new TopicQuestionRow("Core Java", 1L, "Чем == отличается от equals()?", 2L, 4.0),
                 new TopicQuestionRow("Core Java", 2L, "Как работает hashCode()?", 2L, 4.0),
                 new TopicQuestionRow("Collections", 3L, "Чем ArrayList отличается от LinkedList?", 1L, 3.5)
         );
-        when(answerRepository.findTopicsWithQuestions(student)).thenReturn(rows);
+        when(answerRepository.findTopicsWithQuestions(student, locale)).thenReturn(rows);
 
         // act
-        List<TopicWithQuestionsDto> result = answerService.findTopicsWithQuestions(student);
+        List<TopicWithQuestionsDto> result = answerService.findTopicsWithQuestions(student, locale);
 
         // assert
         assertEquals(2, result.size());

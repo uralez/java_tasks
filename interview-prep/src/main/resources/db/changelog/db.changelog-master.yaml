@@ -19,3 +19,11 @@
       file: db/changelog/changes/009_insert_topics.sql
   - include:
       file: db/changelog/changes/010_insert_questions.sql
+  - include:
+      file: db/changelog/changes/011_create_topic_translation.sql
+  - include:
+      file: db/changelog/changes/012_create_question_translation.sql
+  - include:
+      file: db/changelog/changes/013_migrate_topic_translations.sql
+  - include:
+      file: db/changelog/changes/014_migrate_question_translations.sql

@@ -1,6 +1,6 @@
 package com.ayakovlev.interviewprep.service;
 
-import com.ayakovlev.interviewprep.entity.Topic;
+import com.ayakovlev.interviewprep.dto.TopicDto;
 import com.ayakovlev.interviewprep.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
 
-    public List<Topic> findAll(){
-        return topicRepository.findAll();
+    public List<TopicDto> findAllWithTranslation (String locale) {
+        return topicRepository.findAllWithTranslation(locale);
     }
 }

@@ -1,5 +1,6 @@
 package com.ayakovlev.interviewprep.service;
 
+import com.ayakovlev.interviewprep.dto.QuestionDto;
 import com.ayakovlev.interviewprep.entity.Question;
 import com.ayakovlev.interviewprep.entity.Topic;
 import com.ayakovlev.interviewprep.repository.QuestionRepository;
@@ -18,7 +19,7 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
-    public List<Question> findByTopic(Topic topic){
-        return questionRepository.findByTopic(topic);
+    public List<QuestionDto> findByTopicWithTranslation(Topic topic, String locale){
+        return questionRepository.findByTopicWithTranslation(topic, locale);
     }
 }

@@ -14,14 +14,21 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     List<Answer> findByStudent(Student student);
 
     @Query("SELECT new com.ayakovlev.interviewprep.dto.TopicQuestionRow(" +
-            "a.question.topic.name, a.question.id, a.question.text, COUNT(a), AVG(a.grade)) " +
+            "tt.name, a.question.id, qt.text, COUNT(a), AVG(a.grade)) " +
             "FROM Answer a " +
+            "JOIN a.question.translations qt " +
+            "JOIN a.question.topic.translations tt " +
             "WHERE a.student = :student " +
-            "GROUP BY a.question.topic.name, a.question.id, a.question.text " +
-            "ORDER BY a.question.topic.name, a.question.text")
-    List<TopicQuestionRow> findTopicsWithQuestions(@Param("student") Student student);
+            "AND qt.locale = :locale " +
+            "AND tt.locale = :locale " +
+            "GROUP BY tt.name, a.question.id, qt.text " +
+            "ORDER BY tt.name, qt.text")
+    List<TopicQuestionRow> findTopicsWithQuestions(
+            @Param("student") Student student,
+            @Param("locale") String locale);
 
-    @Query("SELECT new com.ayakovlev.interviewprep.dto.GradePointDto(a.answerDate, a.grade) " +
+    @Query("SELECT new com.ayakovlev.interviewprep.dto.GradePointDto" +
+            "(a.answerDate, a.grade) " +
             "FROM Answer a " +
             "WHERE a.student = :student AND a.question.id = :questionId " +
             "ORDER BY a.answerDate, a.dcre")
