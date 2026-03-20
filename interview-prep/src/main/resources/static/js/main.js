@@ -1,7 +1,8 @@
 // AJAX загрузка вопросов по теме
 function loadQuestions(topicId) {
     const questionSelect = document.getElementById('questionId');
-    questionSelect.innerHTML = '<option value="">- выберите вопрос -</option>';
+    questionSelect.innerHTML = `<option value="">${i18n.selectQuestion}</option>`;
+//    questionSelect.innerHTML = '<option value="">- выберите вопрос -</option>';
     if (topicId) {
         fetch('/questions?topicId=' + topicId)
             .then(response => response.json())

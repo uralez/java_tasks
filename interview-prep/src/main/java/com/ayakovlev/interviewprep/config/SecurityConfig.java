@@ -44,7 +44,7 @@ public class SecurityConfig {
     private final StudentService studentService;
 
     /**
-     * Defines which URLs  are accessible without authentication
+     * Defines which URLs are accessible without authentication
      * and configures login/logout behaviour.
      *
      * Когда браузер отправляет запрос к вашему приложению — он не попадает сразу в контроллер. Сначала он проходит

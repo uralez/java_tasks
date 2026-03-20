@@ -27,3 +27,12 @@
       file: db/changelog/changes/013_migrate_topic_translations.sql
   - include:
       file: db/changelog/changes/014_migrate_question_translations.sql
+  - include:
+      file: db/changelog/changes/015_insert_topic_translations_en_de.sql
+  - include:
+      file: db/changelog/changes/016_insert_question_translations_en_de.sql
+  - include:
+      file: db/changelog/changes/017_drop_topic_name.sql
+  - include:
+      file: db/changelog/changes/018_drop_question_text.sql
+

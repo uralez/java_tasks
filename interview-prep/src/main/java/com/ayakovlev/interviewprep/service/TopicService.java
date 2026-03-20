@@ -14,6 +14,7 @@ public class TopicService {
     private final TopicRepository topicRepository;
 
     public List<TopicDto> findAllWithTranslation (String locale) {
-        return topicRepository.findAllWithTranslation(locale);
+        List<TopicDto> res = topicRepository.findAllWithTranslation(locale);
+        return res;
     }
 }
