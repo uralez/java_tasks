@@ -1,8 +1,11 @@
 package com.ayakovlev.interviewprep.repository;
 
+import com.ayakovlev.interviewprep.entity.Role;
 import com.ayakovlev.interviewprep.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,4 +24,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      * automatically based on the method name.
      */
     Optional<Student> findByLogin(String login);
+
+    List<Student> findByRoleAndDcreBefore(Role role, LocalDateTime cutoff);
 }

@@ -35,4 +35,7 @@
       file: db/changelog/changes/017_drop_topic_name.sql
   - include:
       file: db/changelog/changes/018_drop_question_text.sql
-
+  - include:
+      file: db/changelog/changes/019_insert_demo_template.sql
+  - include:
+      file: db/changelog/changes/020_copy_answers_to_demo_template.sql

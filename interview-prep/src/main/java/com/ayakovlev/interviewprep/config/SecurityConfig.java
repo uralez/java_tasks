@@ -1,15 +1,19 @@
 package com.ayakovlev.interviewprep.config;
 
-
+import com.ayakovlev.interviewprep.entity.Role;
+import com.ayakovlev.interviewprep.entity.Student;
 import com.ayakovlev.interviewprep.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -42,6 +46,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final StudentService studentService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Defines which URLs are accessible without authentication
@@ -66,10 +71,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .authenticationProvider(authenticationProvider())
                 // Функциональный интерфейс: Customizer<AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry>
                 // SAM: void customize(C configurer);
                 .authorizeHttpRequests(auth -> auth // фильтр проверки прав доступа
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll() // доступны всем без авторизации
+                        .requestMatchers(
+                                "/login",
+                                "/register",
+                                "/demo/login", // Разрешить доступ к /demo/login без аутентификации
+                                "/css/**",
+                                "/js/**"
+                        ).permitAll() // доступны всем без авторизации
                         .requestMatchers("/admin/**").hasRole("ADMIN") // /admin/** — только пользователям с ролью ADMIN
                         .anyRequest().authenticated() // все остальные URL — только залогиненным пользователям
                 )
@@ -86,6 +98,22 @@ public class SecurityConfig {
                         .permitAll()
                 );
         return httpSecurity.build();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(studentService);
+        provider.setPasswordEncoder(passwordEncoder);
+        // FI: UserDetailsChecker
+        // SAM: void check(UserDetails userDetails)
+        provider.setPreAuthenticationChecks(userDetails -> {
+            Student student = (Student) userDetails;
+            if (student.getRole() == Role.DEMO_TEMPLATE) {
+                throw new DisabledException("DEMO_TEMPLATE accounts cannot log in");
+            }
+        });
+        return provider;
     }
 
     @Bean
