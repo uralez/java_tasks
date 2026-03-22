@@ -5,15 +5,16 @@ import com.ayakovlev.interviewprep.entity.Student;
 import com.ayakovlev.interviewprep.repository.AnswerRepository;
 import com.ayakovlev.interviewprep.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DemoService {
@@ -50,10 +51,7 @@ public class DemoService {
     public void deleteExpiredDemoAccounts() {
         // отсекать
         LocalDateTime cutoff = LocalDateTime.now().minusHours(24);
-        List<Student> expired = studentRepository.findByRoleAndDcreBefore(Role.DEMO, cutoff);
-        for(Student demo : expired){
-            answerRepository.deleteByStudent(demo);
-            studentRepository.delete(demo);
-        }
+        int deleted = studentRepository.deleteByStudentAndDcreBefore(Role.DEMO, cutoff);
+        log.info("Deleted expired DEMO accounts: {}", deleted);
     }
 }

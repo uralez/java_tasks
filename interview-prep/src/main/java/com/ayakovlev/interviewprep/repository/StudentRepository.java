@@ -3,6 +3,9 @@ package com.ayakovlev.interviewprep.repository;
 import com.ayakovlev.interviewprep.entity.Role;
 import com.ayakovlev.interviewprep.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,5 +28,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
      */
     Optional<Student> findByLogin(String login);
 
-    List<Student> findByRoleAndDcreBefore(Role role, LocalDateTime cutoff);
+    /**
+     * Будут удалены устаревшие ДЕМО-юзеры и каскадно их ответы
+     */
+    @Modifying
+    @Query("DELETE FROM Student s WHERE s.role = :role AND s.dcre < :cutoff")
+    int deleteByStudentAndDcreBefore(@Param("role") Role role, @Param("cutoff") LocalDateTime cutoff);
 }
