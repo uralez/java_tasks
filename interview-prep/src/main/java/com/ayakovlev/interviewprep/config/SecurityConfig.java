@@ -96,7 +96,9 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout") // после выхода — редирект на /login?logout
                         // параметр ?logout можно использовать в Thymeleaf, чтобы показать сообщение "Вы вышли из системы"
                         .permitAll()
-                );
+                )
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/error/403"));
         return httpSecurity.build();
     }
 
