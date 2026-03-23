@@ -51,7 +51,7 @@ public class DemoService {
     public void deleteExpiredDemoAccounts() {
         // отсекать
         LocalDateTime cutoff = LocalDateTime.now().minusHours(24);
-        int deleted = studentRepository.deleteByStudentAndDcreBefore(Role.DEMO, cutoff);
+        int deleted = studentRepository.deleteByRoleAndDcreBefore(Role.DEMO, cutoff);
         log.info("Deleted expired DEMO accounts: {}", deleted);
     }
 }

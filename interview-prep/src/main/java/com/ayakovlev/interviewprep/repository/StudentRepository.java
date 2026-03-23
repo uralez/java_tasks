@@ -29,9 +29,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByLogin(String login);
 
     /**
-     * Будут удалены устаревшие ДЕМО-юзеры и каскадно их ответы
+     * Deletes expired DEMO students directly via a single DELETE query.
+     * Associated answers are removed automatically via ON DELETE CASCADE on answer.student_id.
+     * Without explicit @Query, Spring Data JPA would generate a SELECT first,
+     * then delete each entity individually - resulting in 2n+1 queries.
      */
     @Modifying
     @Query("DELETE FROM Student s WHERE s.role = :role AND s.dcre < :cutoff")
-    int deleteByStudentAndDcreBefore(@Param("role") Role role, @Param("cutoff") LocalDateTime cutoff);
+    int deleteByRoleAndDcreBefore(@Param("role") Role role, @Param("cutoff") LocalDateTime cutoff);
 }
