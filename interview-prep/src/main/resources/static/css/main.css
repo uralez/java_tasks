@@ -446,3 +446,18 @@ body.page-index {
 .lang-switcher a:hover {
     color: var(--accent);
 }
+/* === form validation === */
+.field-select.invalid,
+.field-textarea.invalid,
+.field-input.invalid {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, .1);
+}
+
+.field-validation-error {
+    color: var(--error);
+    font-size: .78rem;
+    font-weight: 400;
+    margin-top: .35rem;
+    padding-left: .1rem;
+}

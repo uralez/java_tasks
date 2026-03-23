@@ -146,8 +146,16 @@
 
 <script th:inline="javascript">
     const i18n = {
-        selectQuestion: /*[[#{form.question.placeholder}]]*/ '- select question -',
-        selectTopic: /*[[#{form.topic.placeholder}]]*/ '- select topic -'
+        selectQuestion: /*[[#{form.question.placeholder}]]*/    '- select question -'   ,
+        selectTopic: /*[[#{form.topic.placeholder}]]*/          '- select topic -'      ,
+        validation: {
+            topicRequired:      /*[[#{validation.topic.required}]]*/    'Please select a topic.'        ,
+            questionRequired:   /*[[#{validation.question.required}]]*/ 'Please select a question.'     ,
+            textRequired:       /*[[#{validation.text.required}]]*/     'Please enter your answer.'     ,
+            evaluatorRequired:  /*[[#{validation.evaluator.required}]]*/'Please select an evaluator.'   ,
+            dateRequired:       /*[[#{validation.date.required}]]*/      'Please select a date.'         ,
+            gradeInvalid:       /*[[#{validation.grade.invalid}]]*/     'Grade must be between 1 and 5.'
+        }
     };
 </script>
 <script th:src="@{/js/main.js}"></script>

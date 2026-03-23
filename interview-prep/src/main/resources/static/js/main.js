@@ -98,3 +98,40 @@ document.querySelectorAll('.question-item').forEach(item => {
             });          
     });
 });
+// Валидация формы регистрации ответа
+document.querySelector('form[action="/answer"]').addEventListener('submit', function (e) {
+    // сбросить предыдущие ошибки
+    document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+    document.querySelectorAll('.field-validation-error').forEach(el => el.remove());
+
+    let valid = true;
+
+    function showError(id, message) {
+        const el = document.getElementById(id);
+        el.classList.add('invalid');
+        const err = document.createElement('p');
+        err.className = 'field-validation-error';
+        err.textContent = message;
+        el.parentNode.appendChild(err);
+        valid = false;
+    }
+
+    const topicId       = document.getElementById('topicId'     ).value;
+    const questionId    = document.getElementById('questionId'  ).value;
+    const text          = document.getElementById('text'        ).value.trim();
+    const grade = parseFloat(document.getElementById('grade'     ).value);
+    const evaluatorId   = document.getElementById('evaluatorId' ).value;
+    const answerDate    = document.getElementById('answerDate'  ).value;
+
+    if (!topicId    ) showError('topicId'   , i18n.validation.topicRequired);
+    if (!questionId ) showError('questionId', i18n.validation.questionRequired);
+    if (!text       ) showError('text'      , i18n.validation.textRequired);
+    if (!evaluatorId) showError('evaluatorId',i18n.validation.evaluatorRequired);
+    if (!answerDate ) showError('answerDate', i18n.validation.dateRequired);
+    if (isNaN(grade) || grade < 1 || grade > 5)
+                      showError('grade', i18n.validation.gradeInvalid);
+
+    if (!valid) {
+        e.preventDefault();
+    }
+});
