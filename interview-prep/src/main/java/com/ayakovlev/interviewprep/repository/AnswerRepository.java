@@ -22,8 +22,8 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
             "WHERE a.student = :student " +
             "AND qt.locale = :locale " +
             "AND tt.locale = :locale " +
-            "GROUP BY tt.name, a.question.id, qt.text " +
-            "ORDER BY tt.name, qt.text")
+            "GROUP BY a.question.topic.id, tt.name, a.question.id, qt.text " +
+            "ORDER BY a.question.topic.id, a.question.id")
     List<TopicQuestionRow> findTopicsWithQuestions(
             @Param("student") Student student,
             @Param("locale") String locale);
