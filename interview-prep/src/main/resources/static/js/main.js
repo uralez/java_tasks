@@ -86,12 +86,29 @@ document.querySelectorAll('.question-item').forEach(item => {
                             borderColor: '#3d6b4f',
                             backgroundColor: 'rgba(61, 107, 79, 0.1)',
                             pointRadius: 4,
-                            tension: 0.3
+                            tension: 0.3,
+                            borderWidth: 3
                         }]
                     },
                     options: {
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    usePointStyle: true,
+                                    pointStyle: 'line',
+                                }
+                            }
+                        },
                         scales: {
-                            y: { min: 1, max: 5}
+                            y: {
+                                min: 1,
+                                max: 6,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value <= 5 ? value : '';
+                                    }
+                                }
+                            }
                         }
                     }
                 });
