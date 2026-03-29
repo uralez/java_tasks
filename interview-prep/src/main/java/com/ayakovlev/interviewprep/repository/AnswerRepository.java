@@ -37,6 +37,25 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
             @Param("questionId") Long questionId,
             @Param("student") Student student);
 
+    List<Answer> findByStudentAndQuestionIdOrderByAnswerDateAscDcreAsc(
+            Student student,
+            Long questionId
+    );
+
+    @Query("SELECT AVG(a.grade) FROM Answer a " +
+            "WHERE a.student = :student AND a.question.topic.id = :topicId")
+    Double avgGradeByTopic(
+            @Param("student") Student student,
+            @Param("topicId") Long topicId
+    );
+
+    @Query("SELECT AVG(a.grade) FROM Answer a " +
+            "WHERE a.student = :student AND a.question.id = :questionId")
+    Double avgGradeByQuestion(
+            @Param("student") Student student,
+            @Param("questionId") Long questionId
+    );
+
     /*
     * @Modifying — это аннотация Spring Data JPA которая говорит что запрос изменяет данные в базе
     * (INSERT, UPDATE, DELETE), а не читает их.
@@ -53,5 +72,5 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
             """, nativeQuery = true)
     void copyAnswersFromTemplate(@Param("templateId") Long templateId, @Param("demoId") Long demoId);
 
-        void deleteByStudent(Student student);
+    void deleteByStudent(Student student);
 }
