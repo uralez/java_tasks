@@ -41,3 +41,5 @@
       file: db/changelog/changes/020_copy_answers_to_demo_template.sql
   - include:
       file: db/changelog/changes/021_add_cascade_delete_answer_student.sql
+  - include:
+      file: db/changelog/changes/022_add_answer_indexes.sql
