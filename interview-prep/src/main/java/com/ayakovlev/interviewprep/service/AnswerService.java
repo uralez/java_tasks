@@ -61,4 +61,12 @@ public class AnswerService {
     public void deleteById(Long id){
         answerRepository.deleteById(id);
     }
+
+    public Double avgGradeByTopic(Student student, Long topicId){
+        return answerRepository.avgGradeByTopic(student, topicId);
+    }
+
+    public Double avgGradeByQuestion(Student student, Long questionId){
+        return answerRepository.avgGradeByQuestion(student, questionId);
+    }
 }
