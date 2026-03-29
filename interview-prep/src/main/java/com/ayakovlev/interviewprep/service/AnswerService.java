@@ -44,4 +44,21 @@ public class AnswerService {
     public List<GradePointDto> findGradesByQuestion(Long questionId, Student student) {
         return answerRepository.findGradesByQuestion(questionId, student);
     }
+
+    public Answer findById(Long id) {
+        return answerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Answer not found: " + id));
+    }
+
+    public List<Answer> findByStudentAndQuestion(
+            Student student,
+            Long questionId
+            ){
+        return answerRepository
+                .findByStudentAndQuestionIdOrderByAnswerDateAscDcreAsc(student, questionId);
+    }
+
+    public void deleteById(Long id){
+        answerRepository.deleteById(id);
+    }
 }
