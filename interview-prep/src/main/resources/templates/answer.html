@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="#{answer.page.title}">Answer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body class="page-index">
+<div class="page">
+
+    <div class="topbar">
+        <div class="brand" th:text="#{topbar.brand}">Interview Prep</div>
+        <div class="topbar-user">
+            <span class="topbar-name" th:text="${#authentication.principal.name}"></span>
+            <span class="topbar-role" th:text="${#authentication.principal.role}"></span>
+        </div>
+        <div class="lang-switcher">
+            <a th:href="@{/(lang=en)}" th:text="#{lang.en}"></a>
+            <a th:href="@{/(lang=de)}" th:text="#{lang.de}"></a>
+            <a th:href="@{/(lang=ru)}" th:text="#{lang.ru}"></a>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn-logout" type="submit" th:text="#{topbar.logout}">Log out</button>
+        </form>
+    </div>
+
+    <div class="welcome">
+        <h1>
+            <span th:text="${answer.question.topic.id}"></span>
+            <span th:text="${answer.question.topic.translations[0].name}"></span>
+        </h1>
+        <p class="subtitle">
+            <span th:text="${answer.question.id}"></span>
+            <span th:text="${answer.question.translations[0].text}"></span>
+        </p>
+    </div>
+
+    <div class="grid">
+
+        <div class="panel">
+            <div class="panel-title" th:text="#{answer.stats}">Statistics</div>
+            <table class="stats-table">
+                <tr>
+                    <td th:text="#{answer.stats.avgTopic}">Avg by topic</td>
+                    <td th:text="${avgTopic != null ? #numbers.formatDecimal(avgTopic, 1, 1) : '-'}"></td>
+                </tr>
+                <tr>
+                    <td th:text="#{answer.stats.avgQuestion}">Avg by question</td>
+                    <td th:text="${avgQuestion != null ? #numbers.formatDecimal(avgQuestion, 1, 1) : '-'}"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title" th:text="#{answer.allAnswers}">All Answers</div>
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th th:text="#{answer.table.id}">ID</th>
+                        <th th:text="#{answer.table.num}">#</th>
+                        <th th:text="#{answer.table.date}">Date</th>
+                        <th th:text="#{answer.table.grade}">Grade</th>
+                        <th th:text="#{answer.table.evaluator}">Evaluator</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="a : ${allAnswers}"
+                        th:classappend="${a.index == currentIndex + 1} ? 'answer-row-active' : 'answer-row'"
+                        th:attr="data-index=${a.index - 1}"
+                        style="cursor:pointer;">
+                        <td th:text="${a.id}"></td>
+                        <td th:text="${a.index}"></td>
+                        <td th:text="${a.answerDate}"></td>
+                        <td th:text="${a.grade}"></td>
+                        <td th:text="${a.evaluatorName}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
