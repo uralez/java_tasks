@@ -17,9 +17,9 @@
             <span class="topbar-role" th:text="${#authentication.principal.role}"></span>
         </div>
         <div class="lang-switcher">
-            <a th:href="@{/(lang=en)}" th:text="#{lang.en}"></a>
-            <a th:href="@{/(lang=de)}" th:text="#{lang.de}"></a>
-            <a th:href="@{/(lang=ru)}" th:text="#{lang.ru}"></a>
+            <a th:href="@{/answer/__${answer.id}__(lang=en)}" th:text="#{lang.en}"></a>
+            <a th:href="@{/answer/__${answer.id}__(lang=de)}" th:text="#{lang.de}"></a>
+            <a th:href="@{/answer/__${answer.id}__(lang=ru)}" th:text="#{lang.ru}"></a>
         </div>
         <form th:action="@{/logout}" method="post">
             <button class="btn-logout" type="submit" th:text="#{topbar.logout}">Log out</button>
@@ -80,8 +80,58 @@
             </table>
         </div>
 
+    </div> <!-- grid -->
+
+    <div class="panel wide" id="answer-panel">
+        <div class="panel-title">
+            <span th:text="#{answer.allAnswers}">Answer</span>
+            <span id="panel-index"></span>
+        </div>
+
+        <form id="answer-form" th:action="@{/answer/__${answer.id}__}" method="post">
+            <input type="hidden" name="_method" value="post"/>
+
+            <div class="field">
+                <div class="field-label-row">
+                    <label for="text" th:text="#{answer.panel.answer}">Answer</label>
+                </div>
+                <textarea id="text" name="text" class="field-textarea"></textarea>
+            </div>
+
+            <div class="field">
+                <div class="field-label-row">
+                    <label for="grade" th:text="#{answer.panel.grade}">Grade</label>
+                </div>
+                <input id="grade" type="number" name="grade" class="field-input" min="1" max="5" step="0.1"/>
+            </div>
+
+            <div class="field">
+                <div class="field-label-row">
+                    <label for="answerDate" th:text="#{answer.panel.date}">Date</label>
+                </div>
+                <input id="answerDate" type="date" name="answerDate" class="field-input"/>
+            </div>
+
+            <div class="field">
+                <div class="field-label-row">
+                    <label for="evaluatorId" th:text="#{answer.panel.evaluator}">Evaluator</label>
+                </div>
+                <select id="evaluatorId" name="evaluatorId" class="field-select">
+                    <option th:each="e : ${evaluators}"
+                    th:value="${e.id}"
+                    th:text="${e.name}"></option>
+                </select>
+            </div>
+
+            <button class="btn" type="submit" th:text="#{answer.panel.save}">Save</button>
+        </form>
     </div>
 </div>
 
+<script th:inline="javascript">
+    const answers = /*[[${allAnswers}]]*/ [];
+    const deleteConfirm = /*[[#{answer.panel.deleteConfirm}]]*/ '';
+</script>
+<script th:src="@{/js/answer.js}"></script>
 </body>
 </html>
