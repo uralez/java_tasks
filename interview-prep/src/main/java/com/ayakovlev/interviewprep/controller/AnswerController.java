@@ -2,6 +2,7 @@ package com.ayakovlev.interviewprep.controller;
 
 import com.ayakovlev.interviewprep.dto.AnswerPageDto;
 import com.ayakovlev.interviewprep.entity.Answer;
+import com.ayakovlev.interviewprep.entity.Evaluator;
 import com.ayakovlev.interviewprep.entity.Student;
 import com.ayakovlev.interviewprep.service.AnswerService;
 import com.ayakovlev.interviewprep.service.EvaluatorService;
@@ -9,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -61,5 +62,33 @@ public class AnswerController {
         model.addAttribute("avgQuestion",   avgQuestion);
 
         return "answer";
+    }
+
+    @PostMapping("/{id}")
+    public String saveAnswer(
+            @PathVariable Long id,
+            @RequestParam String text,
+            @RequestParam BigDecimal grade,
+            @RequestParam Long evaluatorId,
+            @RequestParam LocalDate answerDate,
+            @AuthenticationPrincipal Student student
+    ){
+        Answer answer = answerService.findById(id);
+
+        if (!answer.getStudent().getId().equals(student.getId())
+                && !student.getRole().name().equals("ADMIN")){
+            return "redirect:/error/403";
+        }
+
+        Evaluator evaluator = new Evaluator();
+        evaluator.setId(evaluatorId);
+
+        answer.setText(text);
+        answer.setGrade(grade);
+        answer.setEvaluator(evaluator);
+        answer.setAnswerDate(answerDate);
+
+        answerService.save(answer);
+        return "redirect:/answer/" + id;
     }
 }
