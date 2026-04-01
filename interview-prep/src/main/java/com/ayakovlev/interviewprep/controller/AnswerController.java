@@ -7,6 +7,7 @@ import com.ayakovlev.interviewprep.entity.Student;
 import com.ayakovlev.interviewprep.service.AnswerService;
 import com.ayakovlev.interviewprep.service.EvaluatorService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Controller
 @RequestMapping("/answer")
 @RequiredArgsConstructor
@@ -90,5 +92,32 @@ public class AnswerController {
 
         answerService.save(answer);
         return "redirect:/answer/" + id;
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteAnswer(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Student student
+    ){
+        log.info("Delete answer: " + id);
+        Answer answer = answerService.findById(id);
+
+        if (!answer.getStudent().getId().equals(student.getId())
+                && !student.getRole().name().equals("ADMIN")) {
+            return "redirect:/error/403";
+        }
+
+        Long questionId = answer.getQuestion().getId();
+        answerService.deleteById(id);
+
+        List<Answer> remaining = answerService.findByStudentAndQuestion(
+                answer.getStudent(),
+                questionId
+        );
+
+        if (remaining.isEmpty()) {
+            return "redirect:/";
+        }
+        return "redirect:/answer/" + remaining.get(0).getId();
     }
 }

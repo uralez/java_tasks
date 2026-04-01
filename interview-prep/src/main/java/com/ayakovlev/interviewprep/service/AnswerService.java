@@ -8,6 +8,7 @@ import com.ayakovlev.interviewprep.entity.Answer;
 import com.ayakovlev.interviewprep.entity.Student;
 import com.ayakovlev.interviewprep.repository.AnswerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnswerService {
@@ -59,6 +61,7 @@ public class AnswerService {
     }
 
     public void deleteById(Long id){
+        log.info("Delete answer: " + id);
         answerRepository.deleteById(id);
     }
 

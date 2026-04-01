@@ -461,3 +461,24 @@ body.page-index {
     margin-top: .35rem;
     padding-left: .1rem;
 }
+
+.btn-delete {
+    width: 100%;
+    padding: .9rem;
+    background: transparent;
+    color: var(--error);
+    border: 1.5px solid var(--error);
+    border-radius: var(--radius);
+    font-family: 'Nunito', sans-serif;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .03em;
+    margin-top: .5rem;
+    transition: background .2s, color .2s;
+}
+
+.btn-delete:hover {
+    background: var(--error);
+    color: #fff;
+}

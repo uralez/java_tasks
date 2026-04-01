@@ -125,6 +125,10 @@
 
             <button class="btn" type="submit" th:text="#{answer.panel.save}">Save</button>
         </form>
+
+        <form id="delete-form" th:action="@{/answer/__${answer.id}__/delete}" method="post">
+            <button class="btn-delete" type="button" id="btn-delete" th:text="#{answer.panel.delete}">Delete</button>
+        </form>
     </div>
 </div>
 
