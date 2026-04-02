@@ -29,7 +29,12 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
             @Param("locale") String locale);
 
     @Query("SELECT new com.ayakovlev.interviewprep.dto.GradePointDto" +
-            "(a.answerDate, a.grade) " +
+            "(" +
+            "   a.id, " +
+            "   a.answerDate, " +
+            "   a.grade," +
+            "   SUBSTRING(a.text, 1, 120)" +
+            ") " +
             "FROM Answer a " +
             "WHERE a.student = :student AND a.question.id = :questionId " +
             "ORDER BY a.answerDate, a.dcre")

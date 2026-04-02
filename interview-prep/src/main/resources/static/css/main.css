@@ -526,3 +526,7 @@ body.page-index {
     border-color: var(--accent2);
     color: var(--accent2);
 }
+
+a.brand {
+    text-decoration: none;
+}

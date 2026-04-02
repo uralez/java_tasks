@@ -11,7 +11,7 @@
 <div class="page">
 
     <div class="topbar">
-        <div class="brand" th:text="#{topbar.brand}">Interview Prep</div>
+        <a class="brand" th:href="@{/}" th:text="#{topbar.brand}">Interview Prep</a>
         <div class="topbar-user">
             <span class="topbar-name" th:text="${#authentication.principal.name}"></span>
             <span class="topbar-role" th:text="${#authentication.principal.role}"></span>

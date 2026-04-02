@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 public class GradePointDto {
-    private LocalDate answerDate;
-    private BigDecimal grade;
+    private Long        id;
+    private LocalDate   answerDate;
+    private BigDecimal  grade;
+    private String      textPreview;
 }

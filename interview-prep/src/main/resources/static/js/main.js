@@ -97,6 +97,28 @@ document.querySelectorAll('.question-item').forEach(item => {
                                     usePointStyle: true,
                                     pointStyle: 'line',
                                 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const p = context.raw;
+                                        return null;
+                                    },
+                                    afterLabel: function(context) {
+                                        const idx = context.dataIndex;
+                                        const p = points[idx];
+                                        return [
+                                            'Grade: ' + p.grade,
+                                            p.textPreview + (p.textPreview.length >= 120 ? '...' : '')
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        onClick: function(event, elements) {
+                            if (elements.length > 0) {
+                                const idx = elements[0].index;
+                                window.location.href = '/answer/' + points[idx].id
                             }
                         },
                         scales: {
