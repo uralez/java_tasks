@@ -482,3 +482,47 @@ body.page-index {
     background: var(--error);
     color: #fff;
 }
+
+/* === mode switcher === */
+.mode-switcher {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin: 1.25rem 0 .75rem;
+    font-size: .85rem;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.mode-btn {
+    cursor: pointer;
+}
+
+.mode-btn input[type="radio"] {
+    display: none;
+}
+
+.mode-btn span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--muted);
+    transition: border-color .2s, color .2s, background .2s;
+}
+
+.mode-btn input[type="radio"]:checked + span {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(61,107,79,.08);
+}
+
+.mode-btn:hover span {
+    border-color: var(--accent2);
+    color: var(--accent2);
+}

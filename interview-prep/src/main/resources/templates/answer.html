@@ -82,6 +82,32 @@
 
     </div> <!-- grid -->
 
+    <div class="mode-switcher">
+        <span th:text="#{answer.mode.label}">View momde</span>
+        <label class="mode-btn">
+            <input type="radio" name="mode" value="1" checked/>
+            <span>1</span>
+        </label>
+        <label class="mode-btn">
+            <input type="radio" name="mode" value="2"/>
+            <span>2</span>
+        </label>
+        <label class="mode-btn">
+            <input type="radio" name="mode" value="3"/>
+            <span>3</span>
+        </label>
+    </div>
+
+    <div class="panel" id="prev-panel" style="display:none;">
+        <div class="panel-title" id="prev-index"></div>
+        <div id="prev-text" class="readonly-text"></div>
+        <div class="readonly-meta">
+            <span id="prev-grade"></span>
+            <span id="prev-date"></span>
+            <span id="prev-evaluator"></span>
+        </div>
+    </div>
+
     <div class="panel wide" id="answer-panel">
         <div class="panel-title">
             <span th:text="#{answer.allAnswers}">Answer</span>
@@ -130,6 +156,17 @@
             <button class="btn-delete" type="button" id="btn-delete" th:text="#{answer.panel.delete}">Delete</button>
         </form>
     </div>
+
+    <div class="panel" id="next-panel" style="display:none;">
+        <div class="panel-title" id="next-index"></div>
+        <div id="next-text" class="readonly-text"></div>
+        <div class="readonly-meta">
+            <span id="next-grade"></span>
+            <span id="next-date"></span>
+            <span id="next-evaluator"></span>
+        </div>
+    </div>
+
 </div>
 
 <script th:inline="javascript">

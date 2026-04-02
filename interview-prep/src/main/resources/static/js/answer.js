@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
             rows.forEach(r => r.classList.remove('answer-row-active'));
             row.classList.add('answer-row-active');
             fillForm(a);
+            const currentMode = parseInt(document.querySelector('input[name="mode"]:checked').value);
+            updatePanels(idx, currentMode);
         });
     });
 
@@ -38,4 +40,47 @@ document.addEventListener('DOMContentLoaded', function () {
     if (answers.length > 0) {
         fillForm(answers[/*[[${currentIndex}]]*/0]);
     }
+
+    document.querySelectorAll('input[name="mode"]').forEach(function(radio){
+        radio.addEventListener('change', function(){
+            const mode = parseInt(this.value);
+            const panel = document.getElementById('answer-panel');
+            panel.setAttribute('data-mode', mode);
+            const idx = answers.indexOf(currentAnswer);
+            updatePanels(idx, mode);
+        });
+    });
+
+    document.getElementById('answer-panel').setAttribute('data-mode', 1);
 });
+
+function updatePanels(idx, mode) {
+    const prev = answers[idx - 1] || null;
+    const next = answers[idx + 1] || null;
+
+    const prevPanel = document.getElementById('prev-panel');
+    const nextPanel = document.getElementById('next-panel');
+
+    if (mode >= 2 && prev) {
+        document.getElementById('prev-index'    ).textContent = '#'+prev.id;
+        document.getElementById('prev-text'     ).textContent =     prev.text;
+        document.getElementById('prev-grade'    ).textContent =     prev.grade;
+        document.getElementById('prev-date'     ).textContent =     prev.answerDate;
+        document.getElementById('prev-evaluator').textContent =     prev.evaluatorName;
+        prevPanel.style.display = '';
+    } else {
+        prevPanel.style.display = 'none';
+    }
+
+    if (mode >= 3 && next) {
+        document.getElementById('next-index'    ).textContent = '#'+next.id;
+        document.getElementById('next-text'     ).textContent =     next.text;
+        document.getElementById('next-grade'    ).textContent =     next.grade;
+        document.getElementById('next-date'     ).textContent =     next.answerDate;
+        document.getElementById('next-evaluator').textContent =     next.evaluatorName;
+        nextPanel.style.display = '';
+    } else {
+        nextPanel.style.display = 'none';
+    }
+
+}
