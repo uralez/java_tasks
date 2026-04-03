@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title th:text="#{answer.page.title}">Answer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
-</head>
+<head th:replace="~{fragments/head :: head(#{answer.page.title})}"></head>
 <body class="page-index">
 <div class="page">
 
-    <div class="topbar">
-        <a class="brand" th:href="@{/}" th:text="#{topbar.brand}">Interview Prep</a>
-        <div class="topbar-user">
-            <span class="topbar-name" th:text="${#authentication.principal.name}"></span>
-            <span class="topbar-role" th:text="${#authentication.principal.role}"></span>
-        </div>
-        <div class="lang-switcher">
-            <a th:href="@{/answer/__${answer.id}__(lang=en)}" th:text="#{lang.en}"></a>
-            <a th:href="@{/answer/__${answer.id}__(lang=de)}" th:text="#{lang.de}"></a>
-            <a th:href="@{/answer/__${answer.id}__(lang=ru)}" th:text="#{lang.ru}"></a>
-        </div>
-        <form th:action="@{/logout}" method="post">
-            <button class="btn-logout" type="submit" th:text="#{topbar.logout}">Log out</button>
-        </form>
-    </div>
+    <div th:replace="~{fragments/topbar :: topbar('/answer/' + ${answer.id})}"></div>
 
     <div class="welcome">
         <h1>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head></head>
+<body>
+<div th:fragment="topbar(langUrl)" class="topbar">
+    <a class="brand" th:href="@{/}" th:text="#{topbar.brand}">Interview Prep</a>
+
+    <div sec:authorize="isAuthenticated()" class="topbar-user">
+        <span class="topbar-name" th:text="${#authentication.principal.name}"></span>
+        <span class="topbar-role" th:text="${#authentication.principal.role}"></span>
+    </div>
+
+    <div class="lang-switcher">
+        <a th:href="${langUrl + '?lang=en'}" th:text="#{lang.en}"></a>
+        <a th:href="${langUrl + '?lang=de'}" th:text="#{lang.de}"></a>
+        <a th:href="${langUrl + '?lang=ru'}" th:text="#{lang.ru}"></a>
+    </div>
+
+    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+        <button class="btn-logout" type="submit" th:text="#{topbar.logout}">Log out</button>
+    </form>
+</div>
+</body>
+</html>

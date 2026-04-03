@@ -1,31 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Interview Preparation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-</head>
+<head th:replace="~{fragments/head :: head(#{welcome.title})}"></head>
 <body class="page-index">
 <div class="page">
 
-    <div class="topbar">
-        <div class="brand" th:text="#{topbar.brand}">Interview Prep</div>
-        <div class="topbar-user">
-            <span class="topbar-name" th:text="${#authentication.principal.name}"></span>
-            <span class="topbar-role" th:text="${#authentication.principal.role}"></span>
-        </div>
-        <div class="lang-switcher">
-            <a th:href="@{/(lang=en)}" th:text="#{lang.en}"></a>
-            <a th:href="@{/(lang=de)}" th:text="#{lang.de}"></a>
-            <a th:href="@{/(lang=ru)}" th:text="#{lang.ru}"></a>
-        </div>
-        <form th:action="@{/logout}" method="post">
-            <button class="btn-logout" type="submit" th:text="#{topbar.logout}">Log out</button>
-        </form>
-    </div>
+    <div th:replace="~{fragments/topbar :: topbar('/')}"></div>
 
     <div class="welcome">
         <h1><span th:text="#{welcome.title}">Hello, </span><span th:text="${#authentication.name}">студент</span></h1>
@@ -144,6 +123,7 @@
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script th:inline="javascript">
     const i18n = {
         selectQuestion: /*[[#{form.question.placeholder}]]*/    '- select question -'   ,

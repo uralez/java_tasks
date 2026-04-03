@@ -77,6 +77,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth // фильтр проверки прав доступа
                         .requestMatchers(
                                 "/login",
+                                "/login/**",
                                 "/register",
                                 "/demo/login", // Разрешить доступ к /demo/login без аутентификации
                                 "/css/**",

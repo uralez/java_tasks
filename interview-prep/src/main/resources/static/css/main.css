@@ -530,3 +530,9 @@ body.page-index {
 a.brand {
     text-decoration: none;
 }
+
+.card .topbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}

@@ -1,21 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title th:text="#{register.title}">Register</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
-</head>
+<head th:replace="~{fragments/head :: head(#{register.title})}"></head>
 <body>
 <div class="card">
-    <div class="brand" th:text="#{topbar.brand}">Interview Prep</div>
 
-    <div class="lang-switcher">
-        <a th:href="@{/register(lang=en)}" th:text="#{lang.en}"></a>
-        <a th:href="@{/register(lang=de)}" th:text="#{lang.de}"></a>
-        <a th:href="@{/register(lang=ru)}" th:text="#{lang.ru}"></a>
-    </div>
+    <div th:replace="~{fragments/topbar :: topbar('/register')}"></div>
 
     <h1 th:text="#{register.title}">Create Account</h1>
     <p class="subtitle" th:text="#{register.subtitle}">Fill in the form to start practicing</p>
