@@ -51,7 +51,7 @@ document.querySelectorAll('.question-item').forEach(item => {
         e.stopPropagation(); // не всплывать к topic-row
         const questionId = this.getAttribute('data-id');
         const topicName = this.getAttribute('data-topic');
-        const questionText = this.textContent;
+        const questionText = this.querySelector('span:last-child').textContent.trim();
 
         // выбрать тему в форме
         const topicSelect = document.getElementById('topicId');

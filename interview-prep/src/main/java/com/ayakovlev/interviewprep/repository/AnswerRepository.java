@@ -15,7 +15,13 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     List<Answer> findByStudent(Student student);
 
     @Query("SELECT new com.ayakovlev.interviewprep.dto.TopicQuestionRow(" +
-            "tt.name, a.question.id, qt.text, COUNT(a), AVG(a.grade)) " +
+            "a.question.topic.id, " +
+            "tt.name, " +
+            "a.question.id, " +
+            "qt.text, " +
+            "COUNT(a), " +
+            "AVG(a.grade)" +
+            ") " +
             "FROM Answer a " +
             "JOIN a.question.translations qt " +
             "JOIN a.question.topic.translations tt " +

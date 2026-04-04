@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class TopicWithQuestionsDto {
+    private Long topicId;
     private String topicName;
     private Long answerCount;
     private Double avgGrade;

@@ -536,3 +536,24 @@ a.brand {
     flex-wrap: wrap;
     margin-bottom: 1.5rem;
 }
+
+/* #22 — id badge */
+.item-id {
+    font-size: .72rem;
+    font-family: 'Courier New', monospace;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: .05rem .35rem;
+    margin-right: .4rem;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
+.question-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+    padding: .2rem 0;
+}

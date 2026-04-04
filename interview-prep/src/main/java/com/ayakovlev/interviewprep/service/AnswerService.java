@@ -37,7 +37,13 @@ public class AnswerService {
         for (TopicQuestionRow row : rows){
             map.computeIfAbsent(
                     row.getTopicName(),
-                    k -> new TopicWithQuestionsDto(row.getTopicName(), row.getAnswerCount(), row.getAvgGrade(), new ArrayList<>())
+                    k -> new TopicWithQuestionsDto(
+                            row.getTopicId(),
+                            row.getTopicName(),
+                            row.getAnswerCount(),
+                            row.getAvgGrade(),
+                            new ArrayList<>()
+                    )
             ).getQuestions().add(new QuestionDto(row.getQuestionId(), row.getQuestionText()));
         }
         return new ArrayList<>(map.values());

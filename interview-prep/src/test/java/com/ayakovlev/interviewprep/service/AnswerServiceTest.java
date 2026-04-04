@@ -85,8 +85,8 @@ public class AnswerServiceTest {
         Student student = new Student();
         Long questionId = 1L;
         List<GradePointDto> points = List.of(
-                new GradePointDto(LocalDate.of(2025, 12, 15), new BigDecimal("3.8")),
-                new GradePointDto(LocalDate.of(2025, 12, 15), new BigDecimal("4.8"))
+                new GradePointDto(1L, LocalDate.of(2025, 12, 15), new BigDecimal("3.8"), "Def"),
+                new GradePointDto(2L, LocalDate.of(2025, 12, 15), new BigDecimal("4.8"), "Ert")
         );
         when(answerRepository.findGradesByQuestion(questionId, student)).thenReturn(points);
 

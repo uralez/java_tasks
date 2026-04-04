@@ -28,7 +28,10 @@
                 <tbody>
                     <th:block th:each="stat : ${topicStats}">
                         <tr class="topic-row" th:attr="data-topic=${stat.topicName}">
-                            <td th:text="${stat.topicName}"></td>
+                            <td>
+                               <span class="item-id" th:text="'#' + ${stat.topicId}"></span>
+                               <span th:text="${stat.topicName}"></span>
+                            </td>
                             <td th:text="${stat.answerCount}"></td>
                             <td th:text="${#numbers.formatDecimal(stat.avgGrade, 1, 1)}"></td>
                         </tr>
@@ -36,9 +39,11 @@
                             <td colspan="3">
                                 <ul class="questions-list">
                                     <li th:each="q : ${stat.questions}"
-                                        th:text="${q.text}"
                                         th:attr="data-id=${q.id}, data-topic=${stat.topicName}"
-                                        class="question-item"></li>
+                                        class="question-item">
+                                        <span class="item-id" th:text="'#' + ${q.id}"></span>
+                                        <span th:text="${q.text}"></span>
+                                    </li>
                                 </ul>
                             </td>
                         </tr>

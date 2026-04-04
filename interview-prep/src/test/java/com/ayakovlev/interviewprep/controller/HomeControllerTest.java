@@ -74,7 +74,7 @@ public class HomeControllerTest {
     @WithMockUser(username = "Andrew", roles = "USER")
     void getGrades_returnsJsonList() throws Exception {
         when(answerService.findGradesByQuestion(anyLong(), any()))
-                .thenReturn(List.of(new GradePointDto(LocalDate.of(2025, 12, 15), new BigDecimal("4.5"))));
+                .thenReturn(List.of(new GradePointDto(1L, LocalDate.of(2025, 12, 15), new BigDecimal("4.5"), "Abc")));
 
         mockMvc.perform(get("/grades").param("questionId", "1"))
                 .andExpect(status().isOk())

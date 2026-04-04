@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class TopicQuestionRow {
+    private Long topicId;
     private String topicName;
     private Long questionId;
     private String questionText;
