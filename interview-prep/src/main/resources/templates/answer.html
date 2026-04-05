@@ -89,52 +89,72 @@
     </div>
 
     <div class="panel wide" id="answer-panel">
-        <div class="panel-title">
-            <span th:text="#{answer.allAnswers}">Answer</span>
-            <span id="panel-index"></span>
+
+        <div class="answer-panel-header">
+            <span class="panel-title" style="margin-bottom:0;">
+                <span th:text="#{answer.allAnswers}">Answer</span>
+                <span id="panel-index"></span>
+            </span>
+
+            <div class="meta-chips">
+
+                <div class="meta-chip-wrap">
+                    <button type="button" class="meta-btn" id="display-grade"></button>
+                    <div class="meta-editor" id="editor-grade">
+                        <div class="meta-editor-header">
+                            <span th:text="#{answer.panel.grade}">Grade</span>
+                            <button type="button" class="meta-editor-close" id="cancel-grade">✕</button>
+                        </div>
+                        <input type="number" id="input-grade" min="1" max="5" step="0.1" class="meta-editor-input"/>
+                    </div>
+                </div>
+
+                <div class="meta-chip-wrap">
+                    <button type="button" class="meta-btn" id="display-date"></button>
+                    <div class="meta-editor" id="editor-date">
+                        <div class="meta-editor-header">
+                            <span th:text="#{answer.panel.date}">Date</span>
+                            <button type="button" class="meta-editor-close" id="cancel-date">✕</button>
+                        </div>
+                        <input type="date" id="input-date" class="meta-editor-input"/>
+                    </div>
+                </div>
+
+                <div class="meta-chip-wrap">
+                    <button type="button" class="meta-btn" id="display-evaluator"></button>
+                    <div class="meta-editor" id="editor-evaluator">
+                        <div class="meta-editor-header">
+                            <span th:text="#{answer.panel.evaluator}">Evaluator</span>
+                            <button type="button" class="meta-editor-close" id="cancel-evaluator">✕</button>
+                        </div>
+                        <div class="meta-evaluator-list" id="evaluator-options">
+                            <div th:each="e : ${evaluators}"
+                                class="meta-evaluator-item"
+                                th:attr="data-id=${e.id}"
+                                th:text="${e.name}"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="answer-panel-actions">
+                <button type="submit" form="answer-form" class="btn" th:text="#{answer.panel.save}">Save</button>
+                <button type="button" class="btn-delete" id="btn-delete" th:text="#{answer.panel.delete}">Delete</button>
+            </div>
         </div>
+
 
         <form id="answer-form" th:action="@{/answer/__${answer.id}__}" method="post">
             <input type="hidden" name="_method" value="post"/>
-
-            <div class="field">
-                <div class="field-label-row">
-                    <label for="text" th:text="#{answer.panel.answer}">Answer</label>
-                </div>
-                <textarea id="text" name="text" class="field-textarea"></textarea>
-            </div>
-
-            <div class="field">
-                <div class="field-label-row">
-                    <label for="grade" th:text="#{answer.panel.grade}">Grade</label>
-                </div>
-                <input id="grade" type="number" name="grade" class="field-input" min="1" max="5" step="0.1"/>
-            </div>
-
-            <div class="field">
-                <div class="field-label-row">
-                    <label for="answerDate" th:text="#{answer.panel.date}">Date</label>
-                </div>
-                <input id="answerDate" type="date" name="answerDate" class="field-input"/>
-            </div>
-
-            <div class="field">
-                <div class="field-label-row">
-                    <label for="evaluatorId" th:text="#{answer.panel.evaluator}">Evaluator</label>
-                </div>
-                <select id="evaluatorId" name="evaluatorId" class="field-select">
-                    <option th:each="e : ${evaluators}"
-                    th:value="${e.id}"
-                    th:text="${e.name}"></option>
-                </select>
-            </div>
-
-            <button class="btn" type="submit" th:text="#{answer.panel.save}">Save</button>
+            <input type="hidden" name="grade" id="grade"/>
+            <input type="hidden" name="answerDate" id="answerDate"/>
+            <input type="hidden" name="evaluatorId" id="evaluatorId"/>
+            <textarea id="text" name="text" class="answer-textarea"></textarea>
         </form>
 
-        <form id="delete-form" th:action="@{/answer/__${answer.id}__/delete}" method="post">
-            <button class="btn-delete" type="button" id="btn-delete" th:text="#{answer.panel.delete}">Delete</button>
-        </form>
+        <form id="delete-form" th:action="@{/answer/__${answer.id}__/delete}" method="post"></form>
+
     </div>
 
     <div class="panel" id="next-panel" style="display:none;">
