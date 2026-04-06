@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.meta-evaluator-item').forEach(function (item) {
             item.classList.toggle('selected', item.getAttribute('data-id') == a.evaluatorId);
         });
+
+        // textarea - подогнать высоту под текст
+        autoResizeTextarea();
     }
 
     // --- Открыть редактор ---
@@ -98,6 +101,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('display-evaluator').addEventListener('click', function () {
         openEditor('evaluator');
     });
+
+    document.getElementById('text').addEventListener('input', autoResizeTextarea);
 
     // --- Клик на оценщика в списке ---
     document.querySelectorAll('.meta-evaluator-item').forEach(function (item) {
@@ -163,7 +168,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('input[name="mode"]').forEach(function (radio) {
         radio.addEventListener('change', function () {
             const mode  = parseInt(this.value);
-            const idx   = answers.indexOf(currentAnswer);
+            document.getElementById('answer-layout').setAttribute('data-mode', mode);
+            const idx = answers.indexOf(currentAnswer);
             updatePanels(idx, mode);
         });
     });
@@ -178,28 +184,41 @@ document.addEventListener('DOMContentLoaded', function () {
 function updatePanels(idx, mode) {
     const prev      = answers[idx - 1] || null;
     const next      = answers[idx + 1] || null;
-    const prevPanel = document.getElementById('prev-panel');
-    const nextPanel = document.getElementById('next-panel');
 
-    if (mode >= 2 && prev) {
-        document.getElementById('prev-index'    ).textContent = '#'+prev.id;
-        document.getElementById('prev-text'     ).textContent =     prev.text;
-        document.getElementById('prev-grade'    ).textContent =     prev.grade;
-        document.getElementById('prev-date'     ).textContent =     prev.answerDate;
-        document.getElementById('prev-evaluator').textContent =     prev.evaluatorName;
-        prevPanel.style.display = '';
+    // ПП
+    if (prev) {
+        document.getElementById('prev-index'            ).textContent = '#'+prev.id;
+        document.getElementById('prev-text'             ).textContent =     prev.text;
+        document.getElementById('prev-display-grade'    ).textContent =     prev.grade;
+        document.getElementById('prev-display-date'     ).textContent =     prev.answerDate;
+        document.getElementById('prev-display-evaluator').textContent =     prev.evaluatorName;
     } else {
-        prevPanel.style.display = 'none';
+        document.getElementById('prev-index'            ).textContent = '';
+        document.getElementById('prev-text'             ).textContent = '';
+        document.getElementById('prev-display-grade'    ).textContent = '';
+        document.getElementById('prev-display-date'     ).textContent = '';
+        document.getElementById('prev-display-evaluator').textContent = '';
     }
+    // СП
+    if (next) {
+        document.getElementById('next-index'            ).textContent = '#'+next.id;
+        document.getElementById('next-text'             ).textContent =     next.text;
+        document.getElementById('next-display-grade'    ).textContent =     next.grade;
+        document.getElementById('next-display-date'     ).textContent =     next.answerDate;
+        document.getElementById('next-display-evaluator').textContent =     next.evaluatorName;
+    } else {
+        document.getElementById('next-index'            ).textContent = '';
+        document.getElementById('next-text'             ).textContent = '';
+        document.getElementById('next-display-grade'    ).textContent = '';
+        document.getElementById('next-display-date'     ).textContent = '';
+        document.getElementById('next-display-evaluator').textContent = '';
+    }
+}
 
-    if (mode >= 3 && next) {
-        document.getElementById('next-index'    ).textContent = '#'+next.id;
-        document.getElementById('next-text'     ).textContent =     next.text;
-        document.getElementById('next-grade'    ).textContent =     next.grade;
-        document.getElementById('next-date'     ).textContent =     next.answerDate;
-        document.getElementById('next-evaluator').textContent =     next.evaluatorName;
-        nextPanel.style.display = '';
-    } else {
-        nextPanel.style.display = 'none';
-    }
+// --- авторазмер textarea ---
+function autoResizeTextarea() {
+    const ta = document.getElementById('text');
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+//    ta.style.height = Math.min(ta.scrollHeight, 600) + 'px';
 }

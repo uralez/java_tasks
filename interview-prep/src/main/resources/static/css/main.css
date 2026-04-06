@@ -238,9 +238,14 @@ body.page-index {
 
 .page {
     width: 100%;
-    max-width: 860px;
+/*    max-width: 860px;*/
     margin: 0 auto;
     animation: fadeUp .45s ease both;
+}
+
+body.page-answer .page {
+    max-width: 100%;
+    padding: 0 1.5rem;
 }
 
 .topbar {
@@ -708,4 +713,114 @@ a.brand {
 .answer-textarea:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(61,107,79,.1);
+}
+
+/* === answer-layout раскладка === */
+.answer-layout {
+    display: grid;
+    gap: 1.25rem;
+}
+
+/* Режим 1: ЗП | ЦП */
+.answer-layout[data-mode="1"] {
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas: "stats answer";
+}
+
+/* Режим 2: ЗП | ПП | ЦП */
+.answer-layout[data-mode="2"] {
+    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-areas: "stats prev answer";
+}
+
+/* Режим 3:
+   ПП | ЦП
+   ЗП | СП  */
+.answer-layout[data-mode="3"] {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "prev  answer"
+        "stats next";
+}
+
+#stats-panel  { grid-area: stats;  }
+#prev-panel   { grid-area: prev;   }
+#answer-panel { grid-area: answer; }
+#next-panel   { grid-area: next;   }
+
+/* Скрываем ПП и СП когда они не нужны */
+.answer-layout[data-mode="1"] #prev-panel,
+.answer-layout[data-mode="1"] #next-panel  { display: none; }
+
+.answer-layout[data-mode="2"] #next-panel  { display: none; }
+
+/* Режим 3 недоступен на маленьких экранах */
+@media (max-width: 700px) {
+    .answer-layout[data-mode="1"],
+    .answer-layout[data-mode="2"],
+    .answer-layout[data-mode="3"] {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "stats"
+            "prev"
+            "answer"
+            "next";
+    }
+
+    /* Скрываем кнопку режима 3 на маленьких экранах */
+    .mode-btn:has(input[value="3"]) {
+        display: none;
+    }
+}
+
+/* readonly-text — текст ответа в ПП и СП */
+.readonly-text {
+    font-size: .95rem;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+    margin-top: .5rem;
+}
+/*  */
+/* Режим 1: ЗП | ЦП */
+.answer-layout[data-mode="1"] {
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas: "stats answer";
+}
+
+/* Режим 2: ЗП | ПП | ЦП — все три равны */
+.answer-layout[data-mode="2"] {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: "stats prev answer";
+}
+
+/* Режим 3 — две равные колонки */
+.answer-layout[data-mode="3"] {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "prev  answer"
+        "stats next";
+}
+/*  */
+#answer-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+#answer-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.answer-textarea {
+    width: 100%;
+    height: auto;
+/*    max-height: 600px;*/
+    resize: none;
+    overflow-y: hidden;
+/*    flex: 1;
+    min-height: 200px;
+    resize: none; */
 }

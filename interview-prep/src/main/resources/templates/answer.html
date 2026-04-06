@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head th:replace="~{fragments/head :: head(#{answer.page.title})}"></head>
-<body class="page-index">
+<body class="page-index page-answer">
 <div class="page">
 
     <div th:replace="~{fragments/topbar :: topbar('/answer/' + ${answer.id})}"></div>
@@ -17,24 +17,31 @@
         </p>
     </div>
 
-    <div class="grid">
+    <div class="answer-layout" id="answer-layout" data-mode="1">
 
-        <div class="panel">
+        <!-- ЗП - Заголовочная панель: статистика + таблица ответов -->
+        <div class="panel" id="stats-panel">
+
+            <div class="mode-switcher" style="margin:0;">
+                <span th:text="#{answer.mode.label}">View mode</span>
+                <label class="mode-btn"><input type="radio" name="mode" value="1" checked/><span>1</span></label>
+                <label class="mode-btn"><input type="radio" name="mode" value="2" /><span>2</span></label>
+                <label class="mode-btn"><input type="radio" name="mode" value="3" /><span>3</span></label>
+            </div>
+
             <div class="panel-title" th:text="#{answer.stats}">Statistics</div>
             <table class="stats-table">
                 <tr>
-                    <td th:text="#{answer.stats.avgTopic}">Avg by topic</td>
+                    <td th:text="#{answer.stats.avgTopic}"></td>
                     <td th:text="${avgTopic != null ? #numbers.formatDecimal(avgTopic, 1, 1) : '-'}"></td>
                 </tr>
                 <tr>
-                    <td th:text="#{answer.stats.avgQuestion}">Avg by question</td>
+                    <td th:text="#{answer.stats.avgQuestion}"></td>
                     <td th:text="${avgQuestion != null ? #numbers.formatDecimal(avgQuestion, 1, 1) : '-'}"></td>
                 </tr>
             </table>
-        </div>
 
-        <div class="panel">
-            <div class="panel-title" th:text="#{answer.allAnswers}">All Answers</div>
+            <div class="panel-title" style="margin-top:1rem;" th:text="#{answer.allAnswers}">All Answers</div>
             <table class="stats-table">
                 <thead>
                     <tr>
@@ -60,113 +67,104 @@
             </table>
         </div>
 
-    </div> <!-- grid -->
-
-    <div class="mode-switcher">
-        <span th:text="#{answer.mode.label}">View momde</span>
-        <label class="mode-btn">
-            <input type="radio" name="mode" value="1" checked/>
-            <span>1</span>
-        </label>
-        <label class="mode-btn">
-            <input type="radio" name="mode" value="2"/>
-            <span>2</span>
-        </label>
-        <label class="mode-btn">
-            <input type="radio" name="mode" value="3"/>
-            <span>3</span>
-        </label>
-    </div>
-
-    <div class="panel" id="prev-panel" style="display:none;">
-        <div class="panel-title" id="prev-index"></div>
-        <div id="prev-text" class="readonly-text"></div>
-        <div class="readonly-meta">
-            <span id="prev-grade"></span>
-            <span id="prev-date"></span>
-            <span id="prev-evaluator"></span>
+        <!-- ПП - Предыдущая панель: предыдущий ответ (только просмотр) -->
+        <div class="panel" id="prev-panel">
+            <div class="answer-panel-header">
+                <span class="panel-title" style="margin-bottom:0;">
+                    <span th:text="#{answer.panel.title}">Answer</span>
+                    <span id="prev-index"></span>
+                </span>
+                <div class="meta-chips">
+                    <button type="button" class="meta-btn" id="prev-display-grade"></button>
+                    <button type="button" class="meta-btn" id="prev-display-date"></button>
+                    <button type="button" class="meta-btn" id="prev-display-evaluator"></button>
+                </div>
+            </div>
+            <div id="prev-text" class="readonly-text"></div>
         </div>
-    </div>
 
-    <div class="panel wide" id="answer-panel">
+        <!-- ЦП - центральаня панель редактирования  -->
+        <div class="panel" id="answer-panel">
 
-        <div class="answer-panel-header">
-            <span class="panel-title" style="margin-bottom:0;">
-                <span th:text="#{answer.allAnswers}">Answer</span>
-                <span id="panel-index"></span>
-            </span>
+            <div class="answer-panel-header">
+                <span class="panel-title" style="margin-bottom:0;">
+                    <span th:text="#{answer.panel.title}">Answer</span>
+                    <span id="panel-index"></span>
+                </span>
 
-            <div class="meta-chips">
-
-                <div class="meta-chip-wrap">
-                    <button type="button" class="meta-btn" id="display-grade"></button>
-                    <div class="meta-editor" id="editor-grade">
-                        <div class="meta-editor-header">
-                            <span th:text="#{answer.panel.grade}">Grade</span>
-                            <button type="button" class="meta-editor-close" id="cancel-grade">✕</button>
+                <div class="meta-chips">
+                    <div class="meta-chip-wrap">
+                        <button type="button" class="meta-btn" id="display-grade"></button>
+                        <div class="meta-editor" id="editor-grade">
+                            <div class="meta-editor-header">
+                                <span th:text="#{answer.panel.grade}">Grade</span>
+                                <button type="button" class="meta-editor-close" id="cancel-grade">✕</button>
+                            </div>
+                            <input type="number" id="input-grade" min="1" max="5" step="0.1" class="meta-editor-input"/>
                         </div>
-                        <input type="number" id="input-grade" min="1" max="5" step="0.1" class="meta-editor-input"/>
+                    </div>
+                    <div class="meta-chip-wrap">
+                        <button type="button" class="meta-btn" id="display-date"></button>
+                        <div class="meta-editor" id="editor-date">
+                            <div class="meta-editor-header">
+                                <span th:text="#{answer.panel.date}">Date</span>
+                                <button type="button" class="meta-editor-close" id="cancel-date">✕</button>
+                            </div>
+                            <input type="date" id="input-date" class="meta-editor-input"/>
+                        </div>
+                    </div>
+
+                    <div class="meta-chip-wrap">
+                        <button type="button" class="meta-btn" id="display-evaluator"></button>
+                        <div class="meta-editor" id="editor-evaluator">
+                            <div class="meta-editor-header">
+                                <span th:text="#{answer.panel.evaluator}">Evaluator</span>
+                                <button type="button" class="meta-editor-close" id="cancel-evaluator">✕</button>
+                            </div>
+                            <div class="meta-evaluator-list" id="evaluator-options">
+                                <div th:each="e : ${evaluators}"
+                                     class="meta-evaluator-item"
+                                     th:attr="data-id=${e.id}"
+                                     th:text="${e.name}"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="meta-chip-wrap">
-                    <button type="button" class="meta-btn" id="display-date"></button>
-                    <div class="meta-editor" id="editor-date">
-                        <div class="meta-editor-header">
-                            <span th:text="#{answer.panel.date}">Date</span>
-                            <button type="button" class="meta-editor-close" id="cancel-date">✕</button>
-                        </div>
-                        <input type="date" id="input-date" class="meta-editor-input"/>
-                    </div>
+                <div class="answer-panel-actions">
+                    <button type="submit" form="answer-form" class="btn" th:text="#{answer.panel.save}">Save</button>
+                    <button type="button" class="btn-delete" id="btn-delete" th:text="#{answer.panel.delete}">Delete</button>
                 </div>
-
-                <div class="meta-chip-wrap">
-                    <button type="button" class="meta-btn" id="display-evaluator"></button>
-                    <div class="meta-editor" id="editor-evaluator">
-                        <div class="meta-editor-header">
-                            <span th:text="#{answer.panel.evaluator}">Evaluator</span>
-                            <button type="button" class="meta-editor-close" id="cancel-evaluator">✕</button>
-                        </div>
-                        <div class="meta-evaluator-list" id="evaluator-options">
-                            <div th:each="e : ${evaluators}"
-                                class="meta-evaluator-item"
-                                th:attr="data-id=${e.id}"
-                                th:text="${e.name}"></div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
-            <div class="answer-panel-actions">
-                <button type="submit" form="answer-form" class="btn" th:text="#{answer.panel.save}">Save</button>
-                <button type="button" class="btn-delete" id="btn-delete" th:text="#{answer.panel.delete}">Delete</button>
+            <form id="answer-form" th:action="@{/answer/__${answer.id}__}" method="post">
+                <input type="hidden" name="_method" value="post"/>
+                <input type="hidden" name="grade" id="grade"/>
+                <input type="hidden" name="answerDate" id="answerDate"/>
+                <input type="hidden" name="evaluatorId" id="evaluatorId"/>
+                <textarea id="text" name="text" class="answer-textarea"></textarea>
+            </form>
+
+            <form id="delete-form" th:action="@{/answer/__${answer.id}__/delete}" method="post"></form>
+        </div>
+
+        <!-- СП: следующий ответ (только просмотр) -->
+        <div class="panel" id="next-panel">
+            <div class="answer-panel-header">
+                <span class="panel-title" style="margin-bottom:0;">
+                    <span th:text="#{answer.panel.title}">Answer</span>
+                    <span id="next-index"></span>
+                </span>
+                <div class="meta-chips">
+                    <button type="button" class="meta-btn" id="next-display-grade"></button>
+                    <button type="button" class="meta-btn" id="next-display-date"></button>
+                    <button type="button" class="meta-btn" id="next-display-evaluator"></button>
+                </div>
             </div>
+            <div id="next-text" class="readonly-text"></div>
         </div>
 
-
-        <form id="answer-form" th:action="@{/answer/__${answer.id}__}" method="post">
-            <input type="hidden" name="_method" value="post"/>
-            <input type="hidden" name="grade" id="grade"/>
-            <input type="hidden" name="answerDate" id="answerDate"/>
-            <input type="hidden" name="evaluatorId" id="evaluatorId"/>
-            <textarea id="text" name="text" class="answer-textarea"></textarea>
-        </form>
-
-        <form id="delete-form" th:action="@{/answer/__${answer.id}__/delete}" method="post"></form>
-
     </div>
-
-    <div class="panel" id="next-panel" style="display:none;">
-        <div class="panel-title" id="next-index"></div>
-        <div id="next-text" class="readonly-text"></div>
-        <div class="readonly-meta">
-            <span id="next-grade"></span>
-            <span id="next-date"></span>
-            <span id="next-evaluator"></span>
-        </div>
-    </div>
-
 </div>
 
 <script th:inline="javascript">
