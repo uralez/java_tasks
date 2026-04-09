@@ -6,12 +6,14 @@ import com.ayakovlev.interviewprep.entity.Evaluator;
 import com.ayakovlev.interviewprep.entity.Student;
 import com.ayakovlev.interviewprep.service.AnswerService;
 import com.ayakovlev.interviewprep.service.EvaluatorService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,8 +32,11 @@ public class AnswerController {
     public String answerPage(
         @PathVariable Long id,
         @AuthenticationPrincipal Student student,
-        Model model
+        Model model,
+        HttpServletRequest request
     ){
+        String locale = RequestContextUtils.getLocale(request).getLanguage();
+
         Answer answer = answerService.findById(id);
 
         if (!answer.getStudent().getId().equals(student.getId())
@@ -56,12 +61,26 @@ public class AnswerController {
         Double avgTopic=answerService.avgGradeByTopic(answer.getStudent(), answer.getQuestion().getTopic().getId());
         Double avgQuestion  = answerService.avgGradeByQuestion(answer.getStudent(), answer.getQuestion().getId());
 
+        String topicName = answer.getQuestion().getTopic().getTranslations().stream()
+                .filter(t -> t.getLocale().equals(locale))
+                .map(t -> t.getName())
+                .findFirst()
+                .orElse("");
+
+        String questionText = answer.getQuestion().getTranslations().stream()
+                .filter(t -> t.getLocale().equals(locale))
+                .map(t -> t.getText())
+                .findFirst()
+                .orElse("");
+
         model.addAttribute("answer",        answer);
         model.addAttribute("allAnswers",    dtos);
         model.addAttribute("currentIndex",  currentIndex);
         model.addAttribute("evaluators",    evaluatorService.findAll());
         model.addAttribute("avgTopic",      avgTopic);
         model.addAttribute("avgQuestion",   avgQuestion);
+        model.addAttribute("topicName",     topicName);
+        model.addAttribute("questionText",  questionText);
 
         return "answer";
     }

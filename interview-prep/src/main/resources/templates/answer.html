@@ -164,12 +164,17 @@
             <div id="next-text" class="readonly-text"></div>
         </div>
 
-    </div>
-</div>
+    </div> <!-- answer-layout -->
+    <div th:replace="~{fragments/confirm-dialog :: confirmDialog}"></div>
+</div> <!-- page -->
 
 <script th:inline="javascript">
     const answers = /*[[${allAnswers}]]*/ [];
     const deleteConfirm = /*[[#{answer.panel.deleteConfirm}]]*/ '';
+    const topicName     = /*[[${topicName}]]*/ '';
+    const questionText  = /*[[${questionText}]]*/ '';
+<!--    const topicName     = /*[[${answer.question.topic.translations[0].name}]]*/ '';-->
+<!--    const questionText  = /*[[${answer.question.translations[0].text}]]*/ '';-->
 </script>
 <script th:src="@{/js/answer.js}"></script>
 </body>

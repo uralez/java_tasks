@@ -1,0 +1,43 @@
+<div th:fragment="confirmDialog"
+     xmlns:th="http://www.thymeleaf.org"
+     id="confirm-overlay"
+     class="confirm-overlay"
+     onclick="handleOverlayClick(event)">
+    <div id="confirm-dialog" class="confirm-dialog">
+
+        <div class="confirm-header">
+            <span class="brand">Interview Prep</span>
+            <button onclick="closeConfirm()" class="meta-editor-close">✕</button>
+        </div>
+
+        <div class="confirm-body">
+            <div class="confirm-context">
+                <div id="confirm-topic" class="confirm-context-topic"></div>
+                <div id="confirm-question" class="confirm-context-question"></div>
+            </div>
+
+            <div class="confirm-title-row">
+                <div class="confirm-icon">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M2 3.5h10M5.5 3.5V2.5h3v1M6 6.5v4M8 6.5v4M3 3.5l.7 7.5a.5.5 0 00.5.5h5.6a.5.5 0 00.5-.5L11 3.5" stroke="var(--error)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="confirm-title" th:text="#{answer.confirm.title}">Remove answer?</div>
+            </div>
+
+            <div class="confirm-text">
+                <span th:text="#{answer.confirm.text}">The Answer</span>
+                <span id="confirm-id" class="confirm-highlight"></span>
+                <span th:text="#{answer.confirm.from}">from</span>
+                <span id="confirm-date" class="confirm-highlight"></span>
+                <span th:text="#{answer.confirm.warning}">will be permanently removed</span>
+            </div>
+        </div>
+
+        <div class="confirm-footer">
+            <button onclick="closeConfirm()" class="btn-logout" th:text="#{answer.confirm.cancel}">Cancel</button>
+            <button onclick="submitDelete()" class="btn-delete confirm-delete-btn" th:text="#{answer.panel.delete}">Delete</button>
+        </div>
+
+    </div>
+</div>

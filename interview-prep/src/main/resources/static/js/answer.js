@@ -156,12 +156,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Delete ---
     document.getElementById('btn-delete').addEventListener('click', function () {
-        const msg = deleteConfirm
-            .replace('{0}', currentAnswer.id)
-            .replace('{1}', currentAnswer.answerDate);
-        if (confirm(msg)) {
-            document.getElementById('delete-form').submit();
-        }
+        document.getElementById('confirm-topic'     ).textContent = topicName;
+        document.getElementById('confirm-question'  ).textContent = questionText;
+        document.getElementById('confirm-id'        ).textContent = '#' + currentAnswer.id + ' ';
+        document.getElementById('confirm-date'      ).textContent = ' ' + currentAnswer.answerDate + ' ';
+
+        document.getElementById('confirm-overlay').style.display = 'flex';
     });
 
     // --- Mode switcher ---
@@ -221,4 +221,16 @@ function autoResizeTextarea() {
     ta.style.height = 'auto';
     ta.style.height = ta.scrollHeight + 'px';
 //    ta.style.height = Math.min(ta.scrollHeight, 600) + 'px';
+}
+
+function closeConfirm() {
+    document.getElementById('confirm-overlay').style.display = 'none';
+}
+
+function handleOverlayClick(e) {
+    if (e.target === document.getElementById('confirm-overlay')) closeConfirm();
+}
+
+function submitDelete() {
+    document.getElementById('delete-form').submit();
 }

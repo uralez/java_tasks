@@ -824,3 +824,110 @@ a.brand {
     min-height: 200px;
     resize: none; */
 }
+
+/* === confirm dialog === */
+.confirm-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(42,37,32,0.35);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirm-dialog {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+    margin: 1rem;
+}
+
+.confirm-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.confirm-body {
+    padding: 1.25rem 1.5rem 0;
+}
+
+.confirm-context {
+    padding: 8px 12px;
+    background: rgba(61,107,79,0.07);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 1.25rem;
+}
+
+.confirm-context-topic {
+    font-size: .72rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 2px;
+}
+
+.confirm-context-question {
+    font-size: .85rem;
+    color: var(--muted);
+}
+
+.confirm-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.confirm-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.confirm-title {
+    font-size: .95rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.confirm-text {
+    font-size: .85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    padding-left: 42px;
+}
+
+.confirm-highlight {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.confirm-footer {
+    border-top: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.confirm-delete-btn {
+    width: auto;
+    padding: .4rem 1.1rem;
+    margin: 0;
+}
