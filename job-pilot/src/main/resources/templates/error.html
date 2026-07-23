@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Страница не найдена — job-pilot')}"></head>
+<body class="auth-page">
+
+<div class="auth-page-content">
+    <div class="auth-card" style="text-align:center;">
+        <h1 class="auth-title">Упс, страница не найдена</h1>
+        <p class="auth-subtitle">Похоже, такой страницы не существует</p>
+        <a class="auth-link" th:href="@{/}">Вернуться на главную</a>
+    </div>
+</div>
+
+</body>
+</html>
