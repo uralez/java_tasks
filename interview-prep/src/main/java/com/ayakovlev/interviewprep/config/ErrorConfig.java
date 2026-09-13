@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ErrorConfig implements ErrorController {
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request){
-        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        Integer statusCode = (Integer) request.getAttribute("jakarta.servlet.error.status_code");
         System.out.println("ERROR STATUS CODE: " + statusCode);
         if (statusCode != null && statusCode == HttpStatus.NOT_FOUND.value()){
             return "error/404";

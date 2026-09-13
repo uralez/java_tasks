@@ -2,6 +2,7 @@ package com.ayakovlev.interviewprep.config;
 
 import com.ayakovlev.interviewprep.entity.Role;
 import com.ayakovlev.interviewprep.entity.Student;
+import com.ayakovlev.interviewprep.repository.StudentRepository;
 import com.ayakovlev.interviewprep.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.LocaleResolver;
 
 /**
  * Spring Security configuration.
@@ -69,7 +71,9 @@ public class SecurityConfig {
      * @return
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
+                                           StudentRepository studentRepository,
+                                           LocaleResolver localeResolver) throws Exception {
         httpSecurity
                 .authenticationProvider(authenticationProvider())
                 // Функциональный интерфейс: Customizer<AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry>
@@ -80,6 +84,8 @@ public class SecurityConfig {
                                 "/login/**",
                                 "/register",
                                 "/demo/login", // Разрешить доступ к /demo/login без аутентификации
+                                "/error",
+                                "/error/**",
                                 "/css/**",
                                 "/js/**"
                         ).permitAll() // доступны всем без авторизации
@@ -89,7 +95,8 @@ public class SecurityConfig {
                 // Функциональный интерфейс: Customizer<FormLoginConfigurer<HttpSecurity>>
                 //SAM: void customize(C configurer);
                 .formLogin(form -> form.loginPage("/login") // фильтр обработки логина // страница логина находится по адресу /login
-                        .defaultSuccessUrl("/", true) // после успешного логина — редирект на /
+                        .successHandler(new LocaleSavingSuccessHandler(studentRepository, localeResolver))
+//                        .defaultSuccessUrl("/", true) // после успешного логина — редирект на /
                         .permitAll()) // сама страница /login доступна всем
                 // Функциональный интерфейса: Customizer<LogoutConfigurer<HttpSecurity>>
                 //SAM: void customize(C configurer);

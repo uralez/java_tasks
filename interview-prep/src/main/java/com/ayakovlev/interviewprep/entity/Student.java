@@ -51,6 +51,9 @@ public class Student extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    @Column
+    private String preferredLanguage;
+
     // --- UserDetails ---
 
     /**

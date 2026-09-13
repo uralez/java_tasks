@@ -451,6 +451,15 @@ body.page-answer .page {
 .lang-switcher a:hover {
     color: var(--accent);
 }
+
+.lang-switcher a.active {
+    background: rgba(61, 107, 79, 0.5);
+    color: white;
+    font-weight: 600;
+    /*padding: 2px 8px;*/
+    border-radius: 12px;
+}
+
 /* === form validation === */
 .field-select.invalid,
 .field-textarea.invalid,
