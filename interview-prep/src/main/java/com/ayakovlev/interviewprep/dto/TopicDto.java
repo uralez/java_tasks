@@ -7,5 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TopicDto {
     private Long id;
+    private Integer orderNumber;
     private String name;
 }

@@ -8,8 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TopicWithQuestionsDto {
     private Long topicId;
+    private Integer topicOrderNumber;
     private String topicName;
-    private Long answerCount;
+    private Double answerCount;
     private Double avgGrade;
     private List<QuestionDto> questions;
 }

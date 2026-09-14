@@ -45,3 +45,5 @@
       file: db/changelog/changes/022_add_answer_indexes.sql
   - include:
       file: db/changelog/changes/023_add_preferred_language_to_student.sql
+  - include:
+      file: db/changelog/changes/024_add_order_number_to_topic.sql

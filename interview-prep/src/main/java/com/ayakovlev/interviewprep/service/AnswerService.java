@@ -3,6 +3,7 @@ package com.ayakovlev.interviewprep.service;
 import com.ayakovlev.interviewprep.dto.GradePointDto;
 import com.ayakovlev.interviewprep.dto.QuestionDto;
 import com.ayakovlev.interviewprep.dto.TopicQuestionRow;
+import com.ayakovlev.interviewprep.dto.TopicQuestionProjection;
 import com.ayakovlev.interviewprep.dto.TopicWithQuestionsDto;
 import com.ayakovlev.interviewprep.entity.Answer;
 import com.ayakovlev.interviewprep.entity.Student;
@@ -32,20 +33,37 @@ public class AnswerService {
     }
 
     public List<TopicWithQuestionsDto> findTopicsWithQuestions(Student student, String locale){
-        List<TopicQuestionRow> rows = answerRepository.findTopicsWithQuestions(student, locale);
-        Map<String, TopicWithQuestionsDto> map = new LinkedHashMap<>();
-        for (TopicQuestionRow row : rows){
+        List<TopicQuestionProjection> rows = answerRepository.findTopicsWithQuestionsNative(student.getId(), locale);
+        Map<Long, TopicWithQuestionsDto> map = new LinkedHashMap<>();
+
+        for (TopicQuestionProjection row : rows){
             map.computeIfAbsent(
-                    row.getTopicName(),
+                    row.getTopicId(),
                     k -> new TopicWithQuestionsDto(
                             row.getTopicId(),
+                            row.getTopicOrderNumber(),
                             row.getTopicName(),
-                            row.getAnswerCount(),
-                            row.getAvgGrade(),
+                            row.getTopicAvgAnswerCount(),
+                            row.getTopicAvgGrade(),
                             new ArrayList<>()
                     )
             ).getQuestions().add(new QuestionDto(row.getQuestionId(), row.getQuestionText()));
         }
+
+//        List<TopicQuestionRow> rows = answerRepository.findTopicsWithQuestions(student, locale);
+//        Map<String, TopicWithQuestionsDto> map = new LinkedHashMap<>();
+//        for (TopicQuestionRow row : rows){
+//            map.computeIfAbsent(
+//                    row.getTopicName(),
+//                    k -> new TopicWithQuestionsDto(
+//                            row.getTopicId(),
+//                            row.getTopicName(),
+//                            row.getAnswerCount(),
+//                            row.getAvgGrade(),
+//                            new ArrayList<>()
+//                    )
+//            ).getQuestions().add(new QuestionDto(row.getQuestionId(), row.getQuestionText()));
+//        }
         return new ArrayList<>(map.values());
     }
 

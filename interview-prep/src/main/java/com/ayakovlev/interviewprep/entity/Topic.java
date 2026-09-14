@@ -14,6 +14,9 @@ import java.util.List;
 @Setter
 public class Topic extends BaseEntity{
 
+    @Column (nullable = false)
+    private Integer orderNumber;
+
     @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY)
     private List<TopicTranslation> translations;
 }

@@ -29,10 +29,10 @@
                     <th:block th:each="stat : ${topicStats}">
                         <tr class="topic-row" th:attr="data-topic=${stat.topicName}">
                             <td>
-                               <span class="item-id" th:text="'#' + ${stat.topicId}"></span>
-                               <span th:text="${stat.topicName}"></span>
+                                <span class="item-id" th:text="'#' + ${stat.topicOrderNumber}"></span>
+                                <span th:text="${stat.topicName}"></span>
                             </td>
-                            <td th:text="${stat.answerCount}"></td>
+                            <td th:text="${#numbers.formatDecimal(stat.answerCount, 1, 1)}"></td>
                             <td th:text="${#numbers.formatDecimal(stat.avgGrade, 1, 1)}"></td>
                         </tr>
                         <tr class="questions-row" th:attr="data-topic=${stat.topicName}" style="display:none;">

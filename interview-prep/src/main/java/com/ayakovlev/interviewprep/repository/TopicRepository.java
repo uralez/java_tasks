@@ -10,9 +10,11 @@ import java.util.List;
 
 public interface TopicRepository extends JpaRepository<Topic, Long> {
     @Query("SELECT new com.ayakovlev.interviewprep.dto.TopicDto" +
-            "(t.id, tt.name) " +
+            "(t.id, t.orderNumber, tt.name) " +
             "FROM Topic t " +
             "JOIN t.translations tt " +
-            "WHERE tt.locale = :locale")
+            "WHERE tt.locale = :locale " +
+            "ORDER BY t.orderNumber"
+    )
     List<TopicDto> findAllWithTranslation(@Param("locale") String locale);
 }
