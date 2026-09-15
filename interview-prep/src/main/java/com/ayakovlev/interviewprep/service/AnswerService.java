@@ -47,23 +47,9 @@ public class AnswerService {
                             row.getTopicAvgGrade(),
                             new ArrayList<>()
                     )
-            ).getQuestions().add(new QuestionDto(row.getQuestionId(), row.getQuestionText()));
+            ).getQuestions().add(new QuestionDto(row.getQuestionId(), row.getQuestionOrderNumber(), row.getQuestionText()));
         }
 
-//        List<TopicQuestionRow> rows = answerRepository.findTopicsWithQuestions(student, locale);
-//        Map<String, TopicWithQuestionsDto> map = new LinkedHashMap<>();
-//        for (TopicQuestionRow row : rows){
-//            map.computeIfAbsent(
-//                    row.getTopicName(),
-//                    k -> new TopicWithQuestionsDto(
-//                            row.getTopicId(),
-//                            row.getTopicName(),
-//                            row.getAnswerCount(),
-//                            row.getAvgGrade(),
-//                            new ArrayList<>()
-//                    )
-//            ).getQuestions().add(new QuestionDto(row.getQuestionId(), row.getQuestionText()));
-//        }
         return new ArrayList<>(map.values());
     }
 

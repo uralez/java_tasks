@@ -47,3 +47,5 @@
       file: db/changelog/changes/023_add_preferred_language_to_student.sql
   - include:
       file: db/changelog/changes/024_add_order_number_to_topic.sql
+  - include:
+      file: db/changelog/changes/025_add_order_number_to_question.sql

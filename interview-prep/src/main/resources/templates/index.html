@@ -41,7 +41,7 @@
                                     <li th:each="q : ${stat.questions}"
                                         th:attr="data-id=${q.id}, data-topic=${stat.topicName}"
                                         class="question-item">
-                                        <span class="item-id" th:text="'#' + ${q.id}"></span>
+                                        <span class="item-id" th:text="'#' + ${q.orderNumber}"></span>
                                         <span th:text="${q.text}"></span>
                                     </li>
                                 </ul>

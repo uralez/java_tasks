@@ -9,6 +9,9 @@ import lombok.Setter;
 @Setter
 public class QuestionTranslation extends BaseEntity{
 
+    /**
+     * fetch = FetchType.LAZY - здесь явное указание ленивости меняет дефолтное поведение;
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;

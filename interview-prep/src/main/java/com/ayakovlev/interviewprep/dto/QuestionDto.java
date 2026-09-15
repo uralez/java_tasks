@@ -7,5 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class QuestionDto {
     private Long id;
+    private Integer orderNumber;
     private String text;
 }

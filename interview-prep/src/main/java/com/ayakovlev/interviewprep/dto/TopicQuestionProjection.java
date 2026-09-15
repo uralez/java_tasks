@@ -5,6 +5,7 @@ public interface TopicQuestionProjection {
     Integer getTopicOrderNumber();
     String getTopicName();
     Long getQuestionId();
+    Integer getQuestionOrderNumber();
     String getQuestionText();
     Long getAnswerCount();
     Double getQuestionAvgGrade();

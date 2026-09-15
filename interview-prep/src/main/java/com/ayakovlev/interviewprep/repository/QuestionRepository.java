@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("SELECT new com.ayakovlev.interviewprep.dto.QuestionDto" +
-            "(q.id, qt.text) " +
+            "(q.id, q.orderNumber, qt.text) " +
             "FROM Question q " +
             "JOIN q.translations qt " +
             "WHERE q.topic = :topic " +

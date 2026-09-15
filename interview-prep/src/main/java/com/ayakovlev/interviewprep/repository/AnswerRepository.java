@@ -21,6 +21,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
                 t.order_number AS topic_order_number,
                 tt.name AS topic_name,
                 q.id AS question_id,
+                q.order_number AS question_order_number,
                 qt.text AS question_text,
                 COUNT(a.id) AS answer_count,
                 AVG(a.grade) AS question_avg_grade,

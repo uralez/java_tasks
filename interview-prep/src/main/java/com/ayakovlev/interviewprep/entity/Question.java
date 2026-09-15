@@ -12,6 +12,13 @@ import java.util.List;
 @Setter
 public class Question extends BaseEntity{
 
+    @Column (nullable = false)
+    private Integer orderNumber;
+
+    /**
+     * mappedBy = "question" => эта сторона связи - не владеющая. Связью управляет класс QuestionTranslation через поле question .
+     * fetch = FetchType.LAZY - добавлено только для ясности, по дефолту у аннотации @OneToMany и так такое поведение.
+     */
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionTranslation> translations;
 
