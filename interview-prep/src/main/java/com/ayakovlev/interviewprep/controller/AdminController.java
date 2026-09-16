@@ -12,12 +12,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,6 +34,25 @@ public class AdminController {
     @GetMapping("/test")
     public String adminTest(){
         return "index"; // просто, чтобы маршрут существовал
+    }
+
+    @PostMapping("/topic/{id}")
+    public String updateTopic(@PathVariable Long id, TopicFormDto dto){
+        Topic topic = topicRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Topic not found: " + id));
+
+        topic.setOrderNumber(dto.getOrderNumber());
+        topicRepository.save(topic);
+
+        List<TopicTranslation> existingTranslations = topic.getTranslations();
+        existingTranslations.forEach(t -> {
+            String newText = dto.getTranslations().get(t.getLocale().toUpperCase());
+            if (newText != null) {
+                t.setName(newText);
+            }
+        });
+        topicTranslationRepository.saveAll(existingTranslations);
+        return "redirect:/";
     }
 
     @PostMapping("/topic")
@@ -71,6 +93,26 @@ public class AdminController {
         int nextOrderNumber = (int)topicRepository.count() + 1;
         model.addAttribute("orderNumber", nextOrderNumber);
         model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
+        return "admin/topic-form";
+    }
+
+    @GetMapping("/topic/{id}/edit")
+    public String editTopicForm(@PathVariable Long id, Model model){
+        Topic topic = topicRepository.findById(id)
+                // Приводит к странице 404, а желательно вменяемую ошибку на странице
+                .orElseThrow(() -> new IllegalArgumentException("Topic not found: " + id));
+
+        List<TopicTranslation> translations = topic.getTranslations();
+        Map<String, String> translationMap = translations.stream()
+                .collect(Collectors.toMap(t -> t.getLocale().toUpperCase(),
+                        TopicTranslation::getName
+                ));
+
+        model.addAttribute("orderNumber", topic.getOrderNumber());
+        model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
+        model.addAttribute("translations", translationMap);
+        model.addAttribute("topicId", topic.getId());
+
         return "admin/topic-form";
     }
 }

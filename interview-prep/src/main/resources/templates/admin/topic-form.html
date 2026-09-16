@@ -14,7 +14,7 @@
 
     <div th:if="${errorMessage}" class="field-validation-error" th:text="${errorMessage}"></div>
 
-    <form id="topic-form" th:action="@{/admin/topic}" method="post">
+    <form id="topic-form" th:action="@{${topicId != null} ? '/admin/topic/' + ${topicId} : '/admin/topic'}" method="post">
 
       <div class="field">
         <div class="field-label-row">
@@ -34,7 +34,9 @@
           <textarea th:id="${'text-' + lang}"
                     th:name="${'translations[' + lang + ']'}"
                     class="field-textarea lang-textarea"
-                    th:attr="data-lang=${lang}"></textarea>
+                    th:attr="data-lang=${lang}"
+                    th:text="${translations != null ? translations.get(lang) : ''}"
+          ></textarea>
           <div class="translation-options" th:id="${'options-' + lang}"></div>
         </div>
       </div>
