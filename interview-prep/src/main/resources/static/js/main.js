@@ -22,6 +22,37 @@ document.getElementById('topicId').addEventListener('change', function () {
     loadQuestions(this.value);
 });
 
+document.querySelectorAll('.admin-btn').forEach(btn => {
+    btn.addEventListener('click', e => e.stopPropagation());
+});
+
+// admin - buttons ADD questions|topics
+document.querySelectorAll('.admin-btn-add').forEach(btn => {
+    btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const topicId = btn.dataset.topicId;
+        if (topicId) {
+            window.location.href = `/admin/topic/${topicId}/question/new`;
+        } else {
+            window.location.href = `/admin/topic/new`;
+        }
+    });
+});
+
+// admin - buttons EDIT questions|topics
+document.querySelectorAll('.admin-btn-edit').forEach(btn => {
+    btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const topicId = btn.dataset.topicId;
+        const questionId = btn.dataset.id;
+        if (questionId) {
+            window.location.href = `/admin/question/${questionId}/edit`;
+        } else {
+            window.location.href = `/admin/topic/${topicId}/edit`;
+        }
+    });
+});
+
 // Аккордеон: клик на тему
 let gradeChart = null;
 

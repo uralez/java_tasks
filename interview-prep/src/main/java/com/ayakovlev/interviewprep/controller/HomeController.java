@@ -61,7 +61,7 @@ public class HomeController {
         model.addAttribute("topics", topicService.findAllWithTranslation(locale));
         model.addAttribute("evaluators", evaluatorService.findAll());
         model.addAttribute("today", LocalDate.now().toString());
-        model.addAttribute("topicStats", answerService.findTopicsWithQuestions(student, locale));
+        model.addAttribute("topicStats", topicService.findTopicsWithQuestions(student, locale));
         return "index";
     }
 

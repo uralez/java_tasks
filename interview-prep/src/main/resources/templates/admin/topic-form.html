@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments/head :: head(#{admin.topic.formTitle})}"></head>
+<body class="page-index page-admin-form">
+<div class="page">
+
+  <div th:replace="~{fragments/topbar :: topbar('/admin/topic/new')}"></div>
+
+  <div class="welcome">
+    <h1 th:text="#{admin.topic.formTitle}">New Topic</h1>
+  </div>
+
+  <div class="panel wide">
+
+    <div th:if="${errorMessage}" class="field-validation-error" th:text="${errorMessage}"></div>
+
+    <form id="topic-form" th:action="@{/admin/topic}" method="post">
+
+      <div class="field">
+        <div class="field-label-row">
+          <label for="orderNumber" th:text="#{admin.form.orderNumber}">Order number</label>
+        </div>
+        <input id="orderNumber" type="number" name="orderNumber"
+               th:classappend="${errorMessage != null} ? 'invalid'"
+               class="field-input"
+               th:value="${orderNumber}" min="1" th:max="${orderNumber}" required/>
+      </div>
+
+      <div id="language-fields">
+        <div class="field" th:each="lang : ${languages}">
+          <div class="field-label-row">
+            <label th:for="${'text-' + lang}" th:text="${lang}">EN</label>
+          </div>
+          <textarea th:id="${'text-' + lang}"
+                    th:name="${'translations[' + lang + ']'}"
+                    class="field-textarea lang-textarea"
+                    th:attr="data-lang=${lang}"></textarea>
+          <div class="translation-options" th:id="${'options-' + lang}"></div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" id="btn-translate" class="btn" disabled th:text="#{admin.form.translate}">Translate</button>
+        <button type="submit" id="btn-save" class="btn" disabled th:text="#{admin.form.save}">Save</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+<script th:src="@{/js/admin-form.js}"></script>
+</body>
+</html>
