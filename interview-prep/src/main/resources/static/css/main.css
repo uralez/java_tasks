@@ -478,11 +478,15 @@ body.page-answer .page {
 
 .field-validation-error {
     color: var(--error);
-    font-size: .78rem;
+    font-size: 1.2rem;
     font-weight: 400;
-    margin-top: .35rem;
-    padding-left: .1rem;
-}
+    margin-top: 1rem;
+    margin-bottom: 1em;
+    padding: 20px;
+    background-color: mistyrose;
+    border: 1.5px solid var(--error);
+    border-color: red;
+    border-radius: 10px;}
 
 .btn-delete {
     width: 100%;

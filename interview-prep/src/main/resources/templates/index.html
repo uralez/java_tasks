@@ -16,6 +16,8 @@
     <div class="grid">
         <div class="panel">
             <div class="panel-title" th:text="#{panel.myTopics}">My Topics</div>
+            <div th:if="${errorMessage}" class="field-validation-error" th:text="${errorMessage}"></div>
+            <div th:if="${successMessage}" id="toast" class="toast" th:text="${successMessage}"></div>
             <div class="panel-title-row" sec:authorize="hasRole('ADMIN')">
                 <button type="button" class="admin-btn admin-btn-add" th:title="#{admin.topic.add}">T<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M8 2.5v11M2.5 8h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
             </div>
@@ -160,5 +162,6 @@
     };
 </script>
 <script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/toast.js}"></script>
 </body>
 </html>
