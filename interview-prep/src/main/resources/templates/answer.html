@@ -169,13 +169,14 @@
 </div> <!-- page -->
 
 <script th:inline="javascript">
-    const answers = /*[[${allAnswers}]]*/ [];
-    const deleteConfirm = /*[[#{answer.panel.deleteConfirm}]]*/ '';
+    const answers       = /*[[${allAnswers}]]*/ [];
+    //const deleteConfirm = /*[[#{answer.panel.deleteConfirm}]]*/ '';
+    const confirmTitle  = /*[[#{answer.confirm.title}]]*/ '';
+    const confirmTextTemplate = /*[[#{answer.confirm.text}]]*/ '';
     const topicName     = /*[[${topicName}]]*/ '';
     const questionText  = /*[[${questionText}]]*/ '';
-<!--    const topicName     = /*[[${answer.question.topic.translations[0].name}]]*/ '';-->
-<!--    const questionText  = /*[[${answer.question.translations[0].text}]]*/ '';-->
 </script>
 <script th:src="@{/js/answer.js}"></script>
+<script th:src="@{/js/confirm-dialog.js}"></script>
 </body>
 </html>

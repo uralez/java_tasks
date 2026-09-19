@@ -53,6 +53,20 @@ document.querySelectorAll('.admin-btn-edit').forEach(btn => {
     });
 });
 
+document.querySelectorAll('.topic-row .admin-btn-delete').forEach(btn => {
+    btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const topicId = btn.dataset.topicId;
+        const topicName = btn.closest('.topic-row').getAttribute('data-topic');
+        openConfirm(
+            confirmTopicDeleteTitle,
+            confirmTopicDeleteText,
+            `/admin/topic/${topicId}/delete`,
+            topicName
+        );
+    });
+});
+
 // Аккордеон: клик на тему
 let gradeChart = null;
 
@@ -82,7 +96,7 @@ document.querySelectorAll('.question-item').forEach(item => {
         e.stopPropagation(); // не всплывать к topic-row
         const questionId = this.getAttribute('data-id');
         const topicName = this.getAttribute('data-topic');
-        const questionText = this.querySelector('span:last-child').textContent.trim();
+        const questionText = this.querySelector('.question-text').textContent.trim();
 
         // выбрать тему в форме
         const topicSelect = document.getElementById('topicId');

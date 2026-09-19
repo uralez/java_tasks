@@ -987,4 +987,7 @@ a.brand {
     border-color: var(--edit);
     color: var(--edit);
 }
-
+.admin-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

@@ -21,4 +21,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
       @Param("topic") Topic topic,
       @Param("locale") String locale
     );
+
+    long countByTopicId(Long topicId);
 }

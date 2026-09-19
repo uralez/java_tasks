@@ -4,6 +4,7 @@ import com.ayakovlev.interviewprep.dto.TopicFormDto;
 import com.ayakovlev.interviewprep.entity.SupportedLanguage;
 import com.ayakovlev.interviewprep.entity.Topic;
 import com.ayakovlev.interviewprep.entity.TopicTranslation;
+import com.ayakovlev.interviewprep.repository.QuestionRepository;
 import com.ayakovlev.interviewprep.repository.TopicRepository;
 import com.ayakovlev.interviewprep.repository.TopicTranslationRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final TopicRepository topicRepository;
     private final TopicTranslationRepository topicTranslationRepository;
+    private final QuestionRepository questionRepository;
     private final MessageSource messageSource;
 
     @GetMapping("/test")
@@ -146,5 +148,28 @@ public class AdminController {
         model.addAttribute("topicId", topic.getId());
 
         return "admin/topic-form";
+    }
+
+    @PostMapping("/topic/{id}/delete")
+    public String deleteTopic(@PathVariable Long id, RedirectAttributes redirectAttributes, Locale locale){
+        Optional<Topic> topicOpt = topicRepository.findById(id);
+        if (topicOpt.isEmpty()){
+            String errorMessage = messageSource.getMessage("admin.topic.notFound", new Object[]{id}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            return "redirect:/";
+        }
+
+        Topic topic = topicOpt.get();
+        long questionCount = questionRepository.countByTopicId(id);
+        if (questionCount > 0){
+            String errorMessage = messageSource.getMessage("admin.topic.hasQuestions", new Object[]{questionCount}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            return "redirect:/";
+        }
+
+        topicTranslationRepository.deleteAll(topic.getTranslations());
+        topicRepository.delete(topic);
+
+        return "redirect:/";
     }
 }

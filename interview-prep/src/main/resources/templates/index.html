@@ -43,7 +43,10 @@
                                 <span sec:authorize="hasRole('ADMIN')" class="admin-controls">
                                     <button type="button" class="admin-btn admin-btn-edit"  th:attr="data-topic-id=${stat.topicId}"     th:title="#{admin.topic.edit}">T<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M11.5 2.5l2 2L5 13l-3 1 1-3 8.5-8.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg></button>
                                     <button type="button" class="admin-btn admin-btn-add"   th:attr="data-topic-id=${stat.topicId}"     th:title="#{admin.question.add}">Q<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M8 2.5v11M2.5 8h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-                                    <button type="button" class="admin-btn admin-btn-delete" th:attr="data-topic-id=${stat.topicId}"    th:title="#{admin.topic.delete}">T<svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5.5 3.5V2.5h3v1M6 6.5v4M8 6.5v4M3 3.5l.7 7.5a.5.5 0 00.5.5h5.6a.5.5 0 00.5-.5L11 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                                    <button type="button" class="admin-btn admin-btn-delete"
+                                            th:attr="data-topic-id=${stat.topicId}"
+                                            th:title="#{admin.topic.delete}"
+                                            th:disabled="${!#lists.isEmpty(stat.questions) and stat.questions[0].id != null}">T<svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5.5 3.5V2.5h3v1M6 6.5v4M8 6.5v4M3 3.5l.7 7.5a.5.5 0 00.5.5h5.6a.5.5 0 00.5-.5L11 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                                 </span>
                             </td>
                             <td th:text="${#numbers.formatDecimal(stat.answerCount, 1, 1)}"></td>
@@ -52,11 +55,15 @@
                         <tr class="questions-row" th:attr="data-topic=${stat.topicName}" style="display:none;">
                             <td colspan="3">
                                 <ul class="questions-list">
+                                    <li th:if="${#lists.isEmpty(stat.questions) or stat.questions[0].id == null}" class="question-item-empty">
+                                        <span th:text="#{panel.noQuestions}">No questions yet</span>
+                                    </li>
                                     <li th:each="q : ${stat.questions}"
+                                        th:if="${q.id != null}"
                                         th:attr="data-id=${q.id}, data-topic=${stat.topicName}"
                                         class="question-item">
                                         <span class="item-id" th:text="'#' + ${q.orderNumber}"></span>
-                                        <span th:text="${q.text}"></span>
+                                        <span class="question-text" th:text="${q.text}"></span>
                                         <span sec:authorize="hasRole('ADMIN')" class="admin-controls">
                                             <button type="button" class="admin-btn admin-btn-edit"      th:attr="data-id=${q.id}" th:title="#{admin.question.edit}">Q<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M11.5 2.5l2 2L5 13l-3 1 1-3 8.5-8.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg></button>
                                             <button type="button" class="admin-btn admin-btn-delete"    th:attr="data-id=${q.id}" th:title="#{admin.question.delete}">Q<svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5.5 3.5V2.5h3v1M6 6.5v4M8 6.5v4M3 3.5l.7 7.5a.5.5 0 00.5.5h5.6a.5.5 0 00.5-.5L11 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -144,6 +151,8 @@
         <span th:text="${currentTime}"></span>
     </div>
 
+    <div th:replace="~{fragments/confirm-dialog :: confirmDialog}"></div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -160,7 +169,10 @@
             gradeInvalid:       /*[[#{validation.grade.invalid}]]*/     'Grade must be between 1 and 5.'
         }
     };
+    const confirmTopicDeleteTitle = /*[[#{admin.topic.deleteConfirm.title}]]*/ '';
+    const confirmTopicDeleteText = /*[[#{admin.topic.deleteConfirm.text}]]*/ '';
 </script>
+<script th:src="@{/js/confirm-dialog.js}"></script>
 <script th:src="@{/js/main.js}"></script>
 <script th:src="@{/js/toast.js}"></script>
 </body>
