@@ -2,7 +2,6 @@
 function loadQuestions(topicId) {
     const questionSelect = document.getElementById('questionId');
     questionSelect.innerHTML = `<option value="">${i18n.selectQuestion}</option>`;
-//    questionSelect.innerHTML = '<option value="">- выберите вопрос -</option>';
     if (topicId) {
         fetch('/questions?topicId=' + topicId)
             .then(response => response.json())
@@ -182,6 +181,7 @@ document.querySelectorAll('.question-item').forEach(item => {
             });          
     });
 });
+
 // Валидация формы регистрации ответа
 document.querySelector('form[action="/answer"]').addEventListener('submit', function (e) {
     // сбросить предыдущие ошибки
@@ -218,4 +218,28 @@ document.querySelector('form[action="/answer"]').addEventListener('submit', func
     if (!valid) {
         e.preventDefault();
     }
+});
+
+document.querySelectorAll('.question-item .admin-btn-delete').forEach(btn => {
+    btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const questionId = btn.dataset.id;
+        const questionItem = btn.closest('.question-item');
+        const questionText = questionItem.querySelector('.question-text').textContent;
+        const topicName = questionItem.dataset.topic;
+
+        fetch(`/admin/question/${questionId}/stats`)
+            .then(response => response.json())
+            .then(stats => {
+                let text;
+                if (stats.answerCount === 0) {
+                    text = confirmQuestionNoAnswers;
+                } else {
+                    text = confirmQuestionHasAnswers
+                        .replace('{0}', stats.answerCount)
+                        .replace('{1}', stats.studentCount);
+                }
+                openConfirm(confirmQuestionDeleteTitle, text, `/admin/question/${questionId}/delete`, topicName, questionText);
+            });
+    });
 });

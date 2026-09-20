@@ -63,4 +63,12 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     void copyAnswersFromTemplate(@Param("templateId") Long templateId, @Param("demoId") Long demoId);
 
     void deleteByStudent(Student student);
+
+    @Query("SELECT COUNT(a) FROM Answer a WHERE a.question.id = :questionId")
+    long countByQuestionId(@Param("questionId") Long questionId);
+
+    @Query("SELECT COUNT(DISTINCT a.student.id) FROM Answer a WHERE a.question.id = :questionId")
+    long countDistinctStudentsByQuestionId(@Param("questionId") Long questionId);
+
+    List<Answer> findByQuestionId(Long questionId);
 }

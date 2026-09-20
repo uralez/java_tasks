@@ -1,21 +1,15 @@
 package com.ayakovlev.interviewprep.controller;
 
+import com.ayakovlev.interviewprep.dto.QuestionFormDto;
 import com.ayakovlev.interviewprep.dto.TopicFormDto;
-import com.ayakovlev.interviewprep.entity.SupportedLanguage;
-import com.ayakovlev.interviewprep.entity.Topic;
-import com.ayakovlev.interviewprep.entity.TopicTranslation;
-import com.ayakovlev.interviewprep.repository.QuestionRepository;
-import com.ayakovlev.interviewprep.repository.TopicRepository;
-import com.ayakovlev.interviewprep.repository.TopicTranslationRepository;
+import com.ayakovlev.interviewprep.entity.*;
+import com.ayakovlev.interviewprep.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -29,6 +23,8 @@ public class AdminController {
     private final TopicRepository topicRepository;
     private final TopicTranslationRepository topicTranslationRepository;
     private final QuestionRepository questionRepository;
+    private final QuestionTranslationRepository questionTranslationRepository;
+    private final AnswerRepository answerRepository;
     private final MessageSource messageSource;
 
     @GetMapping("/test")
@@ -169,6 +165,143 @@ public class AdminController {
 
         topicTranslationRepository.deleteAll(topic.getTranslations());
         topicRepository.delete(topic);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/topic/{topicId}/question/new")
+    public String newQuestionForm(@PathVariable Long topicId, Model model, RedirectAttributes redirectAttributes, Locale locale){
+        Optional<Topic> topicOpt = topicRepository.findById(topicId);
+        if (topicOpt.isEmpty()) {
+            String errorMessage = messageSource.getMessage("admin.topic.notFound", new Object[]{topicId}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            return "redirect:/";
+        }
+
+        long nextOrderNumber = questionRepository.count() + 1;
+        model.addAttribute("orderNumber", nextOrderNumber);
+        model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
+        model.addAttribute("topicId", topicId);
+
+        return "admin/question-form";
+    }
+
+    @PostMapping("/topic/{topicId}/question")
+    public String saveQuestion(@PathVariable Long topicId, QuestionFormDto dto, RedirectAttributes redirectAttributes, Locale locale){
+        Optional<Topic> topicOpt = topicRepository.findById(topicId);
+        if (topicOpt.isEmpty()){
+            String errorMessage = messageSource.getMessage("admin.topic.notFound", new Object[]{topicId}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            return "redirect:/";
+        }
+
+        long maxAllowed = questionRepository.count() + 1;
+        if (dto.getOrderNumber() == null || dto.getOrderNumber() > maxAllowed || dto.getOrderNumber() < 1) {
+            String errorMessage = messageSource.getMessage("admin.form.orderNumber.invalid", new Object[]{maxAllowed}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            return "redirect:/admin/topic/" + topicId + "/question/new";
+        }
+
+        Question question = new Question();
+        question.setOrderNumber(dto.getOrderNumber());
+        question.setTopic(topicOpt.get());
+        questionRepository.save(question);
+
+        List<QuestionTranslation> translations = dto.getTranslations().entrySet().stream()
+                .map(entry -> {
+                    QuestionTranslation translation = new QuestionTranslation();
+                    translation.setQuestion(question);
+                    translation.setLocale(entry.getKey().toLowerCase());
+                    translation.setText(entry.getValue());
+                    return translation;
+                })
+                .toList();
+
+        questionTranslationRepository.saveAll(translations);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/question/{id}/edit")
+    public String editQuestionForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes, Locale locale){
+        Optional<Question> questionOpt = questionRepository.findById(id);
+        if (questionOpt.isEmpty()) {
+            String errorMessage = messageSource.getMessage("admin.question.notFound", new Object[]{id}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            return "redirect:/";
+        }
+        Question question = questionOpt.get();
+
+        List<QuestionTranslation> translations = question.getTranslations();
+        Map<String, String> translationMap = translations.stream()
+                .collect(Collectors.toMap(
+                        t -> t.getLocale().toUpperCase(),
+                        QuestionTranslation::getText
+                ));
+
+        model.addAttribute("orderNumber", question.getOrderNumber());
+        model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
+        model.addAttribute("translations", translationMap);
+        model.addAttribute("questionId", question.getId());
+        model.addAttribute("topicId", question.getTopic().getId());
+
+        return "admin/question-form";
+    }
+
+    @PostMapping("/question/{id}")
+    public String updateQuestion(@PathVariable Long id, QuestionFormDto dto, RedirectAttributes redirectAttributes, Locale locale){
+        Optional<Question> questionOpt = questionRepository.findById(id);
+        if (questionOpt.isEmpty()) {
+            String errorMessage = messageSource.getMessage("admin.question.notFound", new Object[]{id}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            return "redirect:/";
+        }
+        Question question = questionOpt.get();
+
+        question.setOrderNumber(dto.getOrderNumber());
+        questionRepository.save(question);
+
+        List<QuestionTranslation> existingTranslations = question.getTranslations();
+        existingTranslations.forEach(t -> {
+            String newText = dto.getTranslations().get(t.getLocale().toUpperCase());
+            if (newText != null) {
+                t.setText(newText);
+            }
+        });
+        questionTranslationRepository.saveAll(existingTranslations);
+
+        String header = messageSource.getMessage(
+                "admin.question.updated", new Object[]{question.getId(), question.getOrderNumber()}, locale);
+
+        StringBuilder sb = new StringBuilder(header).append("\n");
+        existingTranslations.forEach(t ->
+                sb.append(t.getLocale().toUpperCase()).append(": ").append(t.getText()).append("\n"));
+
+        redirectAttributes.addFlashAttribute("successMessage", sb.toString());
+        return "redirect:/";
+    }
+
+    @GetMapping("/question/{questionId}/stats")
+    @ResponseBody
+    public Map<String, Long> getQuestionStats(@PathVariable Long questionId) {
+        long answerCount = answerRepository.countByQuestionId(questionId);
+        long studentCount = answerRepository.countDistinctStudentsByQuestionId(questionId);
+        return Map.of("answerCount", answerCount, "studentCount", studentCount);
+    }
+
+    @PostMapping("/question/{id}/delete")
+    public String deleteQuestion(@PathVariable Long id, RedirectAttributes redirectAttributes, Locale locale){
+        Optional<Question> questionOpt = questionRepository.findById(id);
+        if (questionOpt.isEmpty()) {
+            String errorMessage = messageSource.getMessage("admin.question.notFound", new Object[]{id}, locale);
+            redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+            return "redirect:/";
+        }
+
+        Question question = questionOpt.get();
+        answerRepository.deleteAll(answerRepository.findByQuestionId(id));
+        questionTranslationRepository.deleteAll(question.getTranslations());
+        questionRepository.delete(question);
 
         return "redirect:/";
     }
