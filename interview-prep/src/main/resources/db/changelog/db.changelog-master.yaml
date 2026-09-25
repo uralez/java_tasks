@@ -49,3 +49,7 @@
       file: db/changelog/changes/024_add_order_number_to_topic.sql
   - include:
       file: db/changelog/changes/025_add_order_number_to_question.sql
+  - include:
+      file: db/changelog/changes/026_create_libre_translate_server.sql
+  - include:
+      file: db/changelog/changes/027_drop_libre_translate_server.table.sql

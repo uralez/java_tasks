@@ -2,8 +2,13 @@ package com.ayakovlev.interviewprep.controller;
 
 import com.ayakovlev.interviewprep.dto.QuestionFormDto;
 import com.ayakovlev.interviewprep.dto.TopicFormDto;
+import com.ayakovlev.interviewprep.dto.TranslateRequestDto;
 import com.ayakovlev.interviewprep.entity.*;
 import com.ayakovlev.interviewprep.repository.*;
+import com.ayakovlev.interviewprep.service.translation.DeepLTranslationProvider;
+import com.ayakovlev.interviewprep.service.translation.MyMemoryTranslationProvider;
+import com.ayakovlev.interviewprep.service.translation.TranslationException;
+import com.ayakovlev.interviewprep.service.translation.TranslationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,12 +25,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
+    private final TranslationService translationService;
+
     private final TopicRepository topicRepository;
     private final TopicTranslationRepository topicTranslationRepository;
     private final QuestionRepository questionRepository;
     private final QuestionTranslationRepository questionTranslationRepository;
     private final AnswerRepository answerRepository;
     private final MessageSource messageSource;
+    private final DeepLTranslationProvider deepL;
+    private final MyMemoryTranslationProvider myMemory;
 
     @GetMapping("/test")
     public String adminTest(){
@@ -304,5 +313,27 @@ public class AdminController {
         questionRepository.delete(question);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/test-translate")
+    @ResponseBody
+    public String testTranslate(){
+        try {
+            return deepL.translate("Hello, how are you?", "EN", "DE");
+        } catch (TranslationException ex) {
+            return "Translation failed: " + ex.getMessage() + "\nCause: " + ex.getCause();
+        }
+    }
+
+    @GetMapping("/tesst-translate-mymemory")
+    @ResponseBody
+    public String testTranslateMyMemory() {
+        return myMemory.translate("Hello, how are you?", "EN", "DE");
+    }
+
+    @PostMapping("/translate")
+    @ResponseBody
+    public Map<String, Map<String, String>> translateForForm(@RequestBody TranslateRequestDto dto){
+        return translationService.translateToAll(dto.getText(), dto.getSourceLang(), dto.getTargetLangs());
     }
 }
