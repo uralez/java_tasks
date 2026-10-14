@@ -54,4 +54,12 @@ public class AnswerService {
     public Double avgGradeByQuestion(Student student, Long questionId){
         return answerRepository.avgGradeByQuestion(student, questionId);
     }
+
+    public long countByQuestionId(Long questionId) {
+        return answerRepository.countByQuestionId(questionId);
+    }
+
+    public long countDistinctStudentsByQuestionId(Long questionId) {
+        return answerRepository.countDistinctStudentsByQuestionId(questionId);
+    }
 }

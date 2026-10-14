@@ -51,8 +51,9 @@ public class CirculaRequest {
         log.info("jobId:            {}",   jobId);
 
         // post
-        String postResponse = submitApplication(restClient, jobId);
-        log.info("POST response:    {}", postResponse);
+        // UNCOMMENT to send the request
+//        String postResponse = submitApplication(restClient, jobId);
+//        log.info("POST response:    {}", postResponse);
     }
 
     private static String submitApplication(RestClient restClient, String jobId){

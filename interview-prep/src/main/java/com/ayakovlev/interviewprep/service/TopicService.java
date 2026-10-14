@@ -1,24 +1,28 @@
 package com.ayakovlev.interviewprep.service;
 
-import com.ayakovlev.interviewprep.dto.QuestionDto;
-import com.ayakovlev.interviewprep.dto.TopicDto;
-import com.ayakovlev.interviewprep.dto.TopicQuestionProjection;
-import com.ayakovlev.interviewprep.dto.TopicWithQuestionsDto;
+import com.ayakovlev.interviewprep.dto.*;
 import com.ayakovlev.interviewprep.entity.Student;
+import com.ayakovlev.interviewprep.entity.Topic;
+import com.ayakovlev.interviewprep.entity.TopicTranslation;
+import com.ayakovlev.interviewprep.repository.QuestionRepository;
 import com.ayakovlev.interviewprep.repository.TopicRepository;
+import com.ayakovlev.interviewprep.repository.TopicTranslationRepository;
+import com.ayakovlev.interviewprep.service.exception.InvalidOrderNumberException;
+import com.ayakovlev.interviewprep.service.exception.TopicHasQuestionsException;
+import com.ayakovlev.interviewprep.service.exception.TopicNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class TopicService {
 
     private final TopicRepository topicRepository;
+    private final TopicTranslationRepository topicTranslationRepository;
+    private final QuestionRepository questionRepository;
 
     public List<TopicDto> findAllWithTranslation (String locale) {
         List<TopicDto> res = topicRepository.findAllWithTranslation(locale);
@@ -44,6 +48,92 @@ public class TopicService {
         }
 
         return new ArrayList<>(map.values());
+    }
+
+    @Transactional
+    public Topic createTopic(TopicFormDto dto) throws InvalidOrderNumberException {
+        long maxAllowed = topicRepository.count() + 1;
+        validateOrderNumber(dto.getOrderNumber(), maxAllowed);
+
+        Topic topic = new Topic();
+        topic.setOrderNumber(dto.getOrderNumber());
+        topicRepository.save(topic);
+
+        List<TopicTranslation> translations = dto.getTranslations().entrySet().stream()
+                .map(entry -> {
+                    TopicTranslation translation = new TopicTranslation();
+                    translation.setTopic(topic);
+                    translation.setLocale(entry.getKey().toLowerCase());
+                    translation.setName(entry.getValue());
+                    return translation;
+                })
+                .toList();
+        topicTranslationRepository.saveAll(translations);
+
+        // excessive action
+        topic.setTranslations(translations);
+
+        return topic;
+    }
+
+    @Transactional
+    public Topic updateTopic(Long id, TopicFormDto dto) throws InvalidOrderNumberException, TopicNotFoundException {
+        long maxAllowed = topicRepository.count();
+        validateOrderNumber(dto.getOrderNumber(), maxAllowed);
+
+        Topic topic = topicRepository.findById(id)
+                .orElseThrow(() -> new TopicNotFoundException(id));
+
+        topic.setOrderNumber(dto.getOrderNumber());
+        topicRepository.save(topic);
+
+        List<TopicTranslation> existingTranslations = topic.getTranslations();
+        existingTranslations.forEach(t -> {
+            String newText = dto.getTranslations().get(t.getLocale().toUpperCase());
+            if (newText != null) {
+                t.setName(newText);
+            }
+        });
+        topicTranslationRepository.saveAll(existingTranslations);
+
+        return topic;
+    }
+
+    @Transactional
+    public Topic deleteTopic(Long topicId) throws TopicNotFoundException, TopicHasQuestionsException {
+        Topic topic = topicRepository.findById(topicId)
+                .orElseThrow(() -> new TopicNotFoundException(topicId));
+
+        long questionCount = questionRepository.countByTopicId(topicId);
+        if (questionCount > 0){
+            throw new TopicHasQuestionsException(questionCount);
+        }
+
+        List<TopicTranslation> translations = topic.getTranslations();
+
+        topicTranslationRepository.deleteAll(topic.getTranslations());
+        topicRepository.delete(topic);
+
+        // excessive action
+        topic.setTranslations(translations);
+        return topic;
+    }
+
+    private void validateOrderNumber(Integer orderNumber, long maxAllowed) throws InvalidOrderNumberException {
+        if (orderNumber == null || orderNumber > maxAllowed || orderNumber < 1) {
+            throw new InvalidOrderNumberException(maxAllowed);
+        }
+    }
+
+    public long getCount() {
+        return topicRepository.count();
+    }
+
+    public Topic findById(Long id) throws TopicNotFoundException{
+        return topicRepository.findById(id)
+                .orElseThrow(() -> {
+                    return new TopicNotFoundException(id);
+                });
     }
 
 }
