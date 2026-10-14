@@ -40,6 +40,10 @@ public class QuestionService {
                 .orElseThrow(() -> new QuestionNotFoundException(id));
     }
 
+    public Long getTopicId(long questionId) throws QuestionNotFoundException {
+        return findById(questionId).getTopic().getId();
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public Question createQuestion(Long topicId, QuestionFormDto dto)
             throws TopicNotFoundException, InvalidOrderNumberException {

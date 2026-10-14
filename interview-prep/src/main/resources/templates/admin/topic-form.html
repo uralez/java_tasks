@@ -23,7 +23,7 @@
         <input id="orderNumber" type="number" name="orderNumber"
                th:classappend="${errorMessage != null} ? 'invalid'"
                class="field-input"
-               th:value="${orderNumber}" min="1" th:max="${orderNumber}" required/>
+               th:value="${orderNumber}" min="1" th:max="${maxOrderNumber}" required/>
       </div>
 
       <div id="language-fields">

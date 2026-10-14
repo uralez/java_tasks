@@ -20,7 +20,7 @@
           <label for="orderNumber" th:text="#{admin.form.orderNumber}">Order number</label>
         </div>
         <input id="orderNumber" type="number" name="orderNumber" class="field-input"
-               th:value="${orderNumber}" th:max="${orderNumber}" min="1" required/>
+               th:value="${orderNumber}" th:max="${maxOrderNumber}" min="1" required/>
       </div>
 
       <div id="language-fields">

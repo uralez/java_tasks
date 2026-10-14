@@ -73,6 +73,9 @@ public class AdminController {
             model.addAttribute("orderNumber", ex.getMaxAllowed());
             model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
             model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("topicId", id);
+            model.addAttribute("translations", dto.getTranslations());
+            model.addAttribute("maxOrderNumber", ex.getMaxAllowed());
             return "admin/topic-form";
         } catch (TopicNotFoundException ex) {
             String errorMessage = messageSource.getMessage("admin.topic.notFound", new Object[]{id}, locale);
@@ -110,6 +113,7 @@ public class AdminController {
     public String newTopicForm(Model model){
         long nextOrderNumber = topicService.getCount() + 1;
         model.addAttribute("orderNumber", nextOrderNumber);
+        model.addAttribute("maxOrderNumber", nextOrderNumber);
         model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
         return "admin/topic-form";
     }
@@ -135,6 +139,7 @@ public class AdminController {
                     ));
 
             model.addAttribute("orderNumber", topic.getOrderNumber());
+            model.addAttribute("maxOrderNumber", topicService.getCount());
             model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
             model.addAttribute("translations", translationMap);
             model.addAttribute("topicId", topic.getId());
@@ -177,6 +182,7 @@ public class AdminController {
             Topic topic = topicService.findById(topicId);
             long nextOrderNumber = questionService.count() + 1;
             model.addAttribute("orderNumber", nextOrderNumber);
+            model.addAttribute("maxOrderNumber", nextOrderNumber);
             model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
             model.addAttribute("topicId", topicId);
 
@@ -214,6 +220,11 @@ public class AdminController {
             model.addAttribute("orderNumber", ex.getMaxAllowed());
             model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
             model.addAttribute("errorMessage", errorMessage);
+
+            model.addAttribute("topicId", topicId);
+            model.addAttribute("translations", dto.getTranslations());
+            model.addAttribute("maxOrderNumber", ex.getMaxAllowed());
+
             return "admin/question-form";
         }
     }
@@ -231,6 +242,7 @@ public class AdminController {
                     ));
 
             model.addAttribute("orderNumber", question.getOrderNumber());
+            model.addAttribute("maxOrderNumber", questionService.count());
             model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
             model.addAttribute("translations", translationMap);
             model.addAttribute("questionId", question.getId());
@@ -269,6 +281,18 @@ public class AdminController {
             model.addAttribute("orderNumber", ex.getMaxAllowed());
             model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
             model.addAttribute("errorMessage", errorMessage);
+
+            model.addAttribute("questionId", id);
+            model.addAttribute("translations", dto.getTranslations());
+            model.addAttribute("maxOrderNumber", ex.getMaxAllowed());
+            try {
+                model.addAttribute("topicId", questionService.getTopicId(id));
+            } catch (QuestionNotFoundException e) {
+                String errorMessage_2 = messageSource.getMessage("admin.question.notFound", new Object[]{id}, locale);
+                redirectAttributes.addFlashAttribute("errorMessage", errorMessage_2);
+                return "redirect:/";
+            }
+
             return "admin/question-form";
         }
     }
