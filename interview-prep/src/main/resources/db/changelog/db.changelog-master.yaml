@@ -53,3 +53,5 @@
       file: db/changelog/changes/026_create_libre_translate_server.sql
   - include:
       file: db/changelog/changes/027_drop_libre_translate_server.table.sql
+  - include:
+      file: db/changelog/changes/028_renumber_questions_within_topic.sql

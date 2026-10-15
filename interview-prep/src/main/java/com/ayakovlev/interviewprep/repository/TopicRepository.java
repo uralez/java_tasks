@@ -4,6 +4,7 @@ import com.ayakovlev.interviewprep.dto.TopicDto;
 import com.ayakovlev.interviewprep.dto.TopicQuestionProjection;
 import com.ayakovlev.interviewprep.entity.Topic;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -29,7 +30,7 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
             LEFT JOIN question_translation qt   ON q.id = qt.question_id    AND qt.locale = :locale
             LEFT JOIN answer a                  ON q.id = a.question_id     AND a.student_id = :studentId
             GROUP BY t.id, t.order_number, tt.name, q.id, qt.text
-            ORDER BY t.order_number, q.id
+            ORDER BY t.order_number, q.order_number, q.id
             """, nativeQuery = true)
     List<TopicQuestionProjection> findTopicsWithQuestions(
             @Param("studentId") Long studentId,
@@ -45,4 +46,36 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
             """
     )
     List<TopicDto> findAllWithTranslation(@Param("locale") String locale);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+            UPDATE Topic t 
+            SET t.orderNumber = t.orderNumber + 1
+            WHERE t.orderNumber >= :from
+            """)
+    void shiftUpFrom(@Param("from") int from);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+            UPDATE Topic t 
+            SET t.orderNumber = t.orderNumber - 1
+            WHERE t.orderNumber > :from 
+            """)
+    void shiftDownAfter(@Param("from") int from);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+            UPDATE Topic t 
+            SET t.orderNumber = t.orderNumber - 1
+            WHERE t.orderNumber > :oldNum AND t.orderNumber <= :newNum
+            """)
+    void shiftDownBetween(@Param("oldNum") int oldNum, @Param("newNum") int newNum);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+            UPDATE Topic t
+            SET t.orderNumber = t.orderNumber + 1 
+            WHERE t.orderNumber >= :newNum AND t.orderNumber < :oldNum
+            """)
+    void shiftUpBetween(@Param("oldNum") int oldNum, @Param("newNum") int newNum);
 }

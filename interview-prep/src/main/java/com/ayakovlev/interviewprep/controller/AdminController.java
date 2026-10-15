@@ -180,7 +180,7 @@ public class AdminController {
     public String newQuestionForm(@PathVariable Long topicId, Model model, RedirectAttributes redirectAttributes, Locale locale){
         try {
             Topic topic = topicService.findById(topicId);
-            long nextOrderNumber = questionService.count() + 1;
+            long nextOrderNumber = questionService.countByTopicId(topicId) + 1;
             model.addAttribute("orderNumber", nextOrderNumber);
             model.addAttribute("maxOrderNumber", nextOrderNumber);
             model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
@@ -242,7 +242,7 @@ public class AdminController {
                     ));
 
             model.addAttribute("orderNumber", question.getOrderNumber());
-            model.addAttribute("maxOrderNumber", questionService.count());
+            model.addAttribute("maxOrderNumber", questionService.countByTopicId(question.getTopic().getId()));
             model.addAttribute("languages", Arrays.stream(SupportedLanguage.values()).map(Enum::name).toList());
             model.addAttribute("translations", translationMap);
             model.addAttribute("questionId", question.getId());

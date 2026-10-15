@@ -47,9 +47,12 @@ public class QuestionService {
     @Transactional(rollbackFor = Exception.class)
     public Question createQuestion(Long topicId, QuestionFormDto dto)
             throws TopicNotFoundException, InvalidOrderNumberException {
+        validateOrderNumber(dto.getOrderNumber(),
+                questionRepository.countByTopicId(topicId) + 1);
+        questionRepository.shiftUpFrom(topicId, dto.getOrderNumber());
+
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new TopicNotFoundException(topicId));
-        validateOrderNumber(dto.getOrderNumber(), questionRepository.count() + 1);
 
         Question question = new Question();
         question.setOrderNumber(dto.getOrderNumber());
@@ -75,9 +78,17 @@ public class QuestionService {
     public Question updateQuestion(Long id, QuestionFormDto dto) throws QuestionNotFoundException, InvalidOrderNumberException {
         Question question = questionRepository.findById(id)
                 .orElseThrow(() -> new QuestionNotFoundException(id));
-        validateOrderNumber(dto.getOrderNumber(), questionRepository.count());
+        validateOrderNumber(dto.getOrderNumber(), questionRepository.countByTopicId(question.getTopic().getId()));
 
-        question.setOrderNumber(dto.getOrderNumber());
+        int oldNum = question.getOrderNumber();
+        int newNum = dto.getOrderNumber();
+        if (newNum > oldNum) questionRepository.shiftDownBetween(question.getTopic().getId(), oldNum, newNum);
+        else if (newNum < oldNum) questionRepository.shiftUpBetween(question.getTopic().getId(), oldNum, newNum);
+
+        question = questionRepository.findById(id)
+                .orElseThrow(() -> new QuestionNotFoundException(id));
+        question.setOrderNumber(newNum);
+//        question.setOrderNumber(dto.getOrderNumber());
         questionRepository.save(question);
 
         List<QuestionTranslation> existingTranslations = question.getTranslations();
@@ -100,6 +111,7 @@ public class QuestionService {
         answerRepository.deleteAll(answerRepository.findByQuestionId(id));
         questionTranslationRepository.deleteAll(question.getTranslations());
         questionRepository.delete(question);
+        questionRepository.shiftDownAfter(question.getTopic().getId(), question.getOrderNumber());
 
         return question;
     }
@@ -112,5 +124,9 @@ public class QuestionService {
 
     public long count() {
         return questionRepository.count();
+    }
+
+    public long countByTopicId(Long topicId){
+        return questionRepository.countByTopicId(topicId);
     }
 }

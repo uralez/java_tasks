@@ -55,6 +55,8 @@ public class TopicService {
         long maxAllowed = topicRepository.count() + 1;
         validateOrderNumber(dto.getOrderNumber(), maxAllowed);
 
+        topicRepository.shiftUpFrom(dto.getOrderNumber());
+
         Topic topic = new Topic();
         topic.setOrderNumber(dto.getOrderNumber());
         topicRepository.save(topic);
@@ -83,8 +85,17 @@ public class TopicService {
 
         Topic topic = topicRepository.findById(id)
                 .orElseThrow(() -> new TopicNotFoundException(id));
+        int oldNum = topic.getOrderNumber();
+        int newNum = dto.getOrderNumber();
+        if(newNum > oldNum) topicRepository.shiftDownBetween(oldNum, newNum);
+        else if(newNum < oldNum) topicRepository.shiftUpBetween(oldNum, newNum);
 
-        topic.setOrderNumber(dto.getOrderNumber());
+        topic = topicRepository.findById(id)
+                .orElseThrow(() -> new TopicNotFoundException(id));
+        topic.setOrderNumber(newNum);
+
+//        topic.setOrderNumber(dto.getOrderNumber());
+
         topicRepository.save(topic);
 
         List<TopicTranslation> existingTranslations = topic.getTranslations();
@@ -113,6 +124,8 @@ public class TopicService {
 
         topicTranslationRepository.deleteAll(topic.getTranslations());
         topicRepository.delete(topic);
+
+        topicRepository.shiftDownAfter(topic.getOrderNumber());
 
         // excessive action
         topic.setTranslations(translations);
