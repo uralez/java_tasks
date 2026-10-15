@@ -33,8 +33,9 @@ public class TopicService {
         List<TopicQuestionProjection> rows = topicRepository.findTopicsWithQuestions(student.getId(), locale);
         Map<Long, TopicWithQuestionsDto> map = new LinkedHashMap<>();
 
+        int globalNumber = 0;
         for (TopicQuestionProjection row : rows){
-            map.computeIfAbsent(
+            TopicWithQuestionsDto topic = map.computeIfAbsent(
                     row.getTopicId(),
                     k -> new TopicWithQuestionsDto(
                             row.getTopicId(),
@@ -44,7 +45,12 @@ public class TopicService {
                             row.getTopicAvgGrade(),
                             new ArrayList<>()
                     )
-            ).getQuestions().add(new QuestionDto(row.getQuestionId(), row.getQuestionOrderNumber(), row.getQuestionText()));
+            );
+            QuestionDto question = new QuestionDto(row.getQuestionId(), row.getQuestionOrderNumber(), row.getQuestionText());
+            if (row.getQuestionId() != null) {
+                question.setGlobalNumber(++globalNumber);
+            }
+            topic.getQuestions().add(question);
         }
 
         return new ArrayList<>(map.values());

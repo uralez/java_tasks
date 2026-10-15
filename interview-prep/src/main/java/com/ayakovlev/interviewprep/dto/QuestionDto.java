@@ -1,12 +1,15 @@
 package com.ayakovlev.interviewprep.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class QuestionDto {
-    private Long id;
-    private Integer orderNumber;
-    private String text;
+    private final Long id;
+    private final Integer orderNumber;
+    private final String text;
+    @Setter
+    private Integer globalNumber;
 }
